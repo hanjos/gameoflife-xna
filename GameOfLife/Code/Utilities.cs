@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using GameOfLife.Events;
 
 namespace GameOfLife
 {
@@ -27,19 +28,6 @@ namespace GameOfLife
             CheckKeyboardEvents(gameTime);
         }
 
-        protected void CheckMouseEvents(GameTime gameTime)
-        {
-            MouseState mouseState = Mouse.GetState();
-
-            foreach (Func<MouseState, MouseState, bool> e in MouseObservers.Keys)
-            {
-                if (e(LastMouseState, mouseState))
-                    MouseObservers[e](mouseState, gameTime);
-            }
-
-            LastMouseState = mouseState;
-        }
-
         protected void CheckKeyboardEvents(GameTime gameTime)
         {
             KeyboardState keyboardState = Keyboard.GetState();
@@ -54,13 +42,21 @@ namespace GameOfLife
         }
         #endregion
 
-        #region Observers
-        public IDictionary<Func<MouseState, MouseState, bool>, Action<MouseState, GameTime>> MouseObservers
-        {
-            get { mouseObservers = mouseObservers ?? new Dictionary<Func<MouseState, MouseState, bool>, Action<MouseState, GameTime>>(); return mouseObservers; }
-            set { mouseObservers = value; }
-        }
+        #region Events
+        public event EventHandler<MouseEventArgs> LeftButtonClicked;
 
+        protected void CheckMouseEvents(GameTime gameTime) 
+        {
+            MouseState current = Mouse.GetState();
+
+            if (current.LeftButton == ButtonState.Released && LastMouseState.LeftButton == ButtonState.Pressed)
+                LeftButtonClicked(this, new MouseEventArgs(LastMouseState, current, gameTime));
+
+            LastMouseState = current;
+        }
+        #endregion
+
+        #region Observers
         public IDictionary<Func<KeyboardState, KeyboardState, bool>, Action<KeyboardState, GameTime>> KeyboardObservers
         {
             get
@@ -91,5 +87,42 @@ namespace GameOfLife
         private MouseState lastMouseState;
         private KeyboardState lastKeyboardState;
         #endregion
+    }
+
+    namespace Events
+    {
+        public class MouseEventArgs : EventArgs
+        {
+            public MouseEventArgs(MouseState last, MouseState current, GameTime gameTime)
+            {
+                Last = last;
+                Current = current;
+                GameTime = gameTime;
+            }
+
+            #region Properties & Fields
+            private MouseState last;
+            private MouseState current;
+            private GameTime gameTime;
+
+            public MouseState Last
+            {
+                get { return last; }
+                private set { last = value; }
+            }
+
+            public MouseState Current
+            {
+                get { return current; }
+                private set { current = value; }
+            }
+
+            public GameTime GameTime
+            {
+                get { return gameTime; }
+                private set { gameTime = value; }
+            }
+            #endregion
+        }
     }
 }
