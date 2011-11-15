@@ -8,8 +8,8 @@ Get Visual Studio (I used [Visual C# 2010 Express][vcsx10], it's free) and [XNA 
 To do
 -----
 
-* **Testing**. Kinda silly for a small project like this, but it's a good excuse to learn how .NET folks do stuff around here.
-* **Refactoring**. Basically prettying up the code. Already got some ideas for event processing, maybe break it away in a separate library.
+* **Testing**. Kinda silly for a small project like this, but it's a good excuse to learn how .NET folks do stuff.
+* **Refactoring**. Basically prettying up the code. Already got some ideas for event processing, since XNA has none for mouse and keyboard events (performance concerns?), but implementing them using C#'s standard event mechanism looks like a **LOT** of boilerplate-iffic code.
 
 Documentation
 -------------
