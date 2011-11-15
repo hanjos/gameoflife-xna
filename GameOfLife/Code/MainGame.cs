@@ -41,7 +41,7 @@ namespace GameOfLife
             input = new InputManager();
             input.MouseObservers.Add(
                 (old, latest) => 
-                    latest.LeftButton == ButtonState.Pressed && old.LeftButton == ButtonState.Released,
+                    latest.LeftButton == ButtonState.Released && old.LeftButton == ButtonState.Pressed,
                 (state, gameTime) => 
                     world.Toggle(XToRow(state.X), YToColumn(state.Y)));
             input.KeyboardObservers.Add(
