@@ -50,9 +50,16 @@ namespace GameOfLife
             MouseState current = Mouse.GetState();
 
             if (current.LeftButton == ButtonState.Released && LastMouseState.LeftButton == ButtonState.Pressed)
-                LeftButtonClicked(this, new MouseEventArgs(LastMouseState, current, gameTime));
+                RaiseLeftButtonClicked(new MouseEventArgs(LastMouseState, current, gameTime));
 
             LastMouseState = current;
+        }
+
+        // for derived classes to use
+        protected virtual void RaiseLeftButtonClicked(MouseEventArgs args) 
+        {
+            if (LeftButtonClicked != null)
+                LeftButtonClicked(this, args);
         }
         #endregion
 
@@ -67,7 +74,6 @@ namespace GameOfLife
             set { keyboardObservers = value; }
         }
 
-        private IDictionary<Func<MouseState, MouseState, bool>, Action<MouseState, GameTime>> mouseObservers;
         private IDictionary<Func<KeyboardState, KeyboardState, bool>, Action<KeyboardState, GameTime>> keyboardObservers;
         #endregion
 
