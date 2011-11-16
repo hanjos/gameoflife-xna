@@ -27,54 +27,56 @@ namespace GameOfLife
             CheckMouseEvents(gameTime);
             CheckKeyboardEvents(gameTime);
         }
-
-        protected void CheckKeyboardEvents(GameTime gameTime)
-        {
-            KeyboardState keyboardState = Keyboard.GetState();
-
-            foreach (Func<KeyboardState, KeyboardState, bool> e in KeyboardObservers.Keys)
-            {
-                if (e(LastKeyboardState, keyboardState))
-                    KeyboardObservers[e](keyboardState, gameTime);
-            }
-
-            LastKeyboardState = keyboardState;
-        }
         #endregion
 
         #region Events
-        public event EventHandler<MouseEventArgs> LeftButtonClicked;
+        public event EventHandler<InputEventArgs<MouseState>> LeftButtonClicked;
+        public event EventHandler<InputEventArgs<KeyboardState>> SpacePressed;
+        public event EventHandler<InputEventArgs<KeyboardState>> EscapePressed;
 
         protected void CheckMouseEvents(GameTime gameTime) 
         {
             MouseState current = Mouse.GetState();
 
             if (current.LeftButton == ButtonState.Released && LastMouseState.LeftButton == ButtonState.Pressed)
-                RaiseLeftButtonClicked(new MouseEventArgs(LastMouseState, current, gameTime));
+                RaiseLeftButtonClicked(new InputEventArgs<MouseState>(LastMouseState, current, gameTime));
 
             LastMouseState = current;
         }
 
+        protected void CheckKeyboardEvents(GameTime gameTime)
+        {
+            KeyboardState current = Keyboard.GetState();
+
+            if (current.IsKeyUp(Keys.Space) && LastKeyboardState.IsKeyDown(Keys.Space))
+                RaiseSpacePressed(new InputEventArgs<KeyboardState>(LastKeyboardState, current, gameTime));
+
+            if (current.IsKeyUp(Keys.Escape) && LastKeyboardState.IsKeyDown(Keys.Escape))
+                RaiseEscapePressed(new InputEventArgs<KeyboardState>(LastKeyboardState, current, gameTime));
+
+            LastKeyboardState = current;
+        }
+
         // for derived classes to use
-        protected virtual void RaiseLeftButtonClicked(MouseEventArgs args) 
+        protected virtual void RaiseLeftButtonClicked(InputEventArgs<MouseState> args)
         {
             if (LeftButtonClicked != null)
                 LeftButtonClicked(this, args);
         }
-        #endregion
 
-        #region Observers
-        public IDictionary<Func<KeyboardState, KeyboardState, bool>, Action<KeyboardState, GameTime>> KeyboardObservers
+        // for derived classes to use
+        protected virtual void RaiseSpacePressed(InputEventArgs<KeyboardState> args)
         {
-            get
-            {
-                keyboardObservers = keyboardObservers ?? new Dictionary<Func<KeyboardState, KeyboardState, bool>, Action<KeyboardState, GameTime>>();
-                return keyboardObservers;
-            }
-            set { keyboardObservers = value; }
+            if (SpacePressed != null)
+                SpacePressed(this, args);
         }
 
-        private IDictionary<Func<KeyboardState, KeyboardState, bool>, Action<KeyboardState, GameTime>> keyboardObservers;
+        // for derived classes to use
+        protected virtual void RaiseEscapePressed(InputEventArgs<KeyboardState> args)
+        {
+            if (EscapePressed != null)
+                EscapePressed(this, args);
+        }
         #endregion
 
         #region Properties & Fields
@@ -97,9 +99,9 @@ namespace GameOfLife
 
     namespace Events
     {
-        public class MouseEventArgs : EventArgs
+        public class InputEventArgs<T> : EventArgs
         {
-            public MouseEventArgs(MouseState last, MouseState current, GameTime gameTime)
+            public InputEventArgs(T last, T current, GameTime gameTime)
             {
                 Last = last;
                 Current = current;
@@ -107,17 +109,17 @@ namespace GameOfLife
             }
 
             #region Properties & Fields
-            private MouseState last;
-            private MouseState current;
+            private T last;
+            private T current;
             private GameTime gameTime;
 
-            public MouseState Last
+            public T Last
             {
                 get { return last; }
                 private set { last = value; }
             }
 
-            public MouseState Current
+            public T Current
             {
                 get { return current; }
                 private set { current = value; }

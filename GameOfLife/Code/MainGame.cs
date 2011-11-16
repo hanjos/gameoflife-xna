@@ -40,21 +40,15 @@ namespace GameOfLife
             world = new World(rows, columns);
             input = new InputManager();
             input.LeftButtonClicked += (sender, args) => world.Toggle(XToRow(args.Current.X), YToColumn(args.Current.Y));
-            input.KeyboardObservers.Add(
-                (old, latest) =>
-                    old.IsKeyUp(Keys.Space) && latest.IsKeyDown(Keys.Space),
-                (state, gameTime) =>
-                {
+            input.SpacePressed += 
+                (sender, args) => {
                     running = !running;
-                    timeOfLastTick = gameTime.TotalGameTime;
-                });
-            input.KeyboardObservers.Add(
-                (old, latest) => 
-                    old.IsKeyUp(Keys.Escape) && latest.IsKeyDown(Keys.Escape),
-                (state, gameTime) =>
-                {
+                    timeOfLastTick = args.GameTime.TotalGameTime;
+                };
+            input.EscapePressed +=
+                (sender, args) => {
                     Exit();
-                });
+                };
 
             graphics = new GraphicsDeviceManager(this);
             graphics.PreferredBackBufferWidth = columns * cellWidth;  // set this value to the desired width of your window
