@@ -9,6 +9,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 using GameOfLife;
+using GameOfLife.Input;
 
 namespace GameOfLife
 {
@@ -39,13 +40,13 @@ namespace GameOfLife
         {
             world = new World(rows, columns);
             input = new InputManager();
-            input.LeftButtonClicked += (sender, args) => world.Toggle(XToRow(args.Current.X), YToColumn(args.Current.Y));
-            input.SpacePressed += 
+            input.CellToggle += (sender, args) => world.Toggle(XToRow(args.Current.X), YToColumn(args.Current.Y));
+            input.ExecutionToggle += 
                 (sender, args) => {
                     running = !running;
                     timeOfLastTick = args.GameTime.TotalGameTime;
                 };
-            input.EscapePressed +=
+            input.QuitGame +=
                 (sender, args) => {
                     Exit();
                 };
