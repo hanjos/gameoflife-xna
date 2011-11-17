@@ -28,8 +28,8 @@ namespace GameOfLife
             {
                 MouseState current = Mouse.GetState();
 
-                if (DetectMouseClicked(MouseButtons.LeftButton)(LastMouseState, current))
-                    RaiseLeftButtonClicked(new InputEventArgs<MouseState>(LastMouseState, current, gameTime));
+                if (DetectMouseClicked(MouseButtons.LeftButton)(LastMouseState, current, gameTime))
+                    RaiseCellToggle(new InputEventArgs<MouseState>(LastMouseState, current, gameTime));
 
                 LastMouseState = current;
             }
@@ -38,41 +38,41 @@ namespace GameOfLife
             {
                 KeyboardState current = Keyboard.GetState();
 
-                if (DetectKeyPressed(Keys.Space)(LastKeyboardState, current))
-                    RaiseSpacePressed(new InputEventArgs<KeyboardState>(LastKeyboardState, current, gameTime));
+                if (DetectKeyPressed(Keys.Space)(LastKeyboardState, current, gameTime))
+                    RaiseExecutionToggle(new InputEventArgs<KeyboardState>(LastKeyboardState, current, gameTime));
 
-                if (DetectKeyPressed(Keys.Escape)(LastKeyboardState, current))
-                    RaiseEscapePressed(new InputEventArgs<KeyboardState>(LastKeyboardState, current, gameTime));
+                if (DetectKeyPressed(Keys.Escape)(LastKeyboardState, current, gameTime))
+                    RaiseQuitGame(new InputEventArgs<KeyboardState>(LastKeyboardState, current, gameTime));
 
                 LastKeyboardState = current;
             }
 
-            protected Func<KeyboardState, KeyboardState, bool> DetectKeyPressed(Keys key)
+            protected Func<KeyboardState, KeyboardState, GameTime, bool> DetectKeyPressed(Keys key)
             {
-                return (KeyboardState last, KeyboardState current) => last.IsKeyDown(key) && current.IsKeyUp(key);
+                return (KeyboardState last, KeyboardState current, GameTime gameTime) => last.IsKeyDown(key) && current.IsKeyUp(key);
             }
 
-            protected Func<MouseState, MouseState, bool> DetectMouseClicked(MouseButtons key)
+            protected Func<MouseState, MouseState, GameTime, bool> DetectMouseClicked(MouseButtons key)
             {
                 return key.DetectClick;
             }
 
             // for derived classes to use
-            protected virtual void RaiseLeftButtonClicked(InputEventArgs<MouseState> args)
+            protected virtual void RaiseCellToggle(InputEventArgs<MouseState> args)
             {
                 if (CellToggle != null)
                     CellToggle(this, args);
             }
 
             // for derived classes to use
-            protected virtual void RaiseSpacePressed(InputEventArgs<KeyboardState> args)
+            protected virtual void RaiseExecutionToggle(InputEventArgs<KeyboardState> args)
             {
                 if (ExecutionToggle != null)
                     ExecutionToggle(this, args);
             }
 
             // for derived classes to use
-            protected virtual void RaiseEscapePressed(InputEventArgs<KeyboardState> args)
+            protected virtual void RaiseQuitGame(InputEventArgs<KeyboardState> args)
             {
                 if (QuitGame != null)
                     QuitGame(this, args);
@@ -82,18 +82,18 @@ namespace GameOfLife
             #region Properties & Fields
             private MouseState LastMouseState
             {
-                get { if (lastMouseState == null) lastMouseState = Mouse.GetState(); return lastMouseState; }
-                set { lastMouseState = value; }
+                get { if (lastMouseState_ == null) lastMouseState_ = Mouse.GetState(); return lastMouseState_; }
+                set { lastMouseState_ = value; }
             }
 
             private KeyboardState LastKeyboardState
             {
-                get { if (lastKeyboardState == null) lastKeyboardState = Keyboard.GetState(); return lastKeyboardState; }
-                set { lastKeyboardState = value; }
+                get { if (lastKeyboardState_ == null) lastKeyboardState_ = Keyboard.GetState(); return lastKeyboardState_; }
+                set { lastKeyboardState_ = value; }
             }
 
-            private MouseState lastMouseState;
-            private KeyboardState lastKeyboardState;
+            private MouseState lastMouseState_;
+            private KeyboardState lastKeyboardState_;
             #endregion
         }
 
@@ -103,11 +103,11 @@ namespace GameOfLife
             public static readonly MouseButtons RightButton = new RightButtonMouseButtons();
             public static readonly MouseButtons MiddleButton = new MiddleButtonMouseButtons();
 
-            public abstract bool DetectClick(MouseState last, MouseState current);
+            public abstract bool DetectClick(MouseState last, MouseState current, GameTime gameTime);
 
             private class LeftButtonMouseButtons : MouseButtons
             {
-                public override bool DetectClick(MouseState last, MouseState current)
+                public override bool DetectClick(MouseState last, MouseState current, GameTime gameTime)
                 {
                     return last.LeftButton == ButtonState.Pressed && current.LeftButton == ButtonState.Released;
                 }
@@ -115,7 +115,7 @@ namespace GameOfLife
 
             private class RightButtonMouseButtons : MouseButtons
             {
-                public override bool DetectClick(MouseState last, MouseState current)
+                public override bool DetectClick(MouseState last, MouseState current, GameTime gameTime)
                 {
                     return last.RightButton == ButtonState.Pressed && current.RightButton == ButtonState.Released;
                 }
@@ -123,13 +123,14 @@ namespace GameOfLife
 
             private class MiddleButtonMouseButtons : MouseButtons
             {
-                public override bool DetectClick(MouseState last, MouseState current)
+                public override bool DetectClick(MouseState last, MouseState current, GameTime gameTime)
                 {
                     return last.MiddleButton == ButtonState.Pressed && current.MiddleButton == ButtonState.Released;
                 }
             }
         }
 
+        #region Event Args
         public class InputEventArgs<T> : EventArgs
         {
             public InputEventArgs(T last, T current, GameTime gameTime)
@@ -163,5 +164,6 @@ namespace GameOfLife
             }
             #endregion
         }
+        #endregion
     }
 }

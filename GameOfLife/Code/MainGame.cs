@@ -134,7 +134,7 @@ namespace GameOfLife
 
         private int ColumnToY(int column) 
         {
-            return (int) (column * graphics.PreferredBackBufferHeight/ columns);
+            return (int) (column * graphics.PreferredBackBufferHeight / columns);
         }
 
         private int RowToX(int row)
