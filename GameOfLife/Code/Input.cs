@@ -28,7 +28,7 @@ namespace GameOfLife
             {
                 MouseState current = Mouse.GetState();
 
-                if (DetectMouseClicked(MouseKeys.LeftButton)(LastMouseState, current))
+                if (DetectMouseClicked(MouseButtons.LeftButton)(LastMouseState, current))
                     RaiseLeftButtonClicked(new InputEventArgs<MouseState>(LastMouseState, current, gameTime));
 
                 LastMouseState = current;
@@ -52,9 +52,9 @@ namespace GameOfLife
                 return (KeyboardState last, KeyboardState current) => last.IsKeyDown(key) && current.IsKeyUp(key);
             }
 
-            protected Func<MouseState, MouseState, bool> DetectMouseClicked(MouseKeys key)
+            protected Func<MouseState, MouseState, bool> DetectMouseClicked(MouseButtons key)
             {
-                return key.Detect;
+                return key.DetectClick;
             }
 
             // for derived classes to use
@@ -97,31 +97,38 @@ namespace GameOfLife
             #endregion
         }
 
-        public abstract class MouseKeys
+        public abstract class MouseButtons
         {
-            public static readonly MouseKeys LeftButton = new LeftButtonMouseKeys();
-            public static readonly MouseKeys RightButton = new RightButtonMouseKeys();
+            public static readonly MouseButtons LeftButton = new LeftButtonMouseButtons();
+            public static readonly MouseButtons RightButton = new RightButtonMouseButtons();
+            public static readonly MouseButtons MiddleButton = new MiddleButtonMouseButtons();
 
-            public abstract bool Detect(MouseState last, MouseState current);
+            public abstract bool DetectClick(MouseState last, MouseState current);
 
-            private class LeftButtonMouseKeys : MouseKeys
+            private class LeftButtonMouseButtons : MouseButtons
             {
-                public override bool Detect(MouseState last, MouseState current)
+                public override bool DetectClick(MouseState last, MouseState current)
                 {
                     return last.LeftButton == ButtonState.Pressed && current.LeftButton == ButtonState.Released;
                 }
             }
 
-            private class RightButtonMouseKeys : MouseKeys
+            private class RightButtonMouseButtons : MouseButtons
             {
-                public override bool Detect(MouseState last, MouseState current)
+                public override bool DetectClick(MouseState last, MouseState current)
                 {
                     return last.RightButton == ButtonState.Pressed && current.RightButton == ButtonState.Released;
                 }
             }
-        }
 
-        
+            private class MiddleButtonMouseButtons : MouseButtons
+            {
+                public override bool DetectClick(MouseState last, MouseState current)
+                {
+                    return last.MiddleButton == ButtonState.Pressed && current.MiddleButton == ButtonState.Released;
+                }
+            }
+        }
 
         public class InputEventArgs<T> : EventArgs
         {

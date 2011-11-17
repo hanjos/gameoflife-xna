@@ -46,10 +46,7 @@ namespace GameOfLife
                     running = !running;
                     timeOfLastTick = args.GameTime.TotalGameTime;
                 };
-            input.QuitGame +=
-                (sender, args) => {
-                    Exit();
-                };
+            input.QuitGame += (sender, args) => Exit();
 
             graphics = new GraphicsDeviceManager(this);
             graphics.PreferredBackBufferWidth = columns * cellWidth;  // set this value to the desired width of your window
