@@ -150,19 +150,17 @@ namespace GameOfLife
         {
             GraphicsDevice.Clear(running ? runningColor : staticColor);
 
-            // TODO: Add your drawing code here
-            spriteBatch.Begin();
-
-            for (int i = 0; i < rows; i++)
-            {
-                for (int j = 0; j < columns; j++)
+            // drawing the world
+            spriteBatch.DrawInScope((self) => {
+                for (int i = 0; i < rows; i++)
                 {
-                    if (world[i, j] == World.CellState.Alive)
-                        spriteBatch.Draw(dummyTexture, new Vector2(RowToX(i), ColumnToY(j)), dummyRectangle, Color.Black);
-                }
-            }
-
-            spriteBatch.End();
+                    for (int j = 0; j < columns; j++)
+                    {
+                        if (world[i, j] == World.CellState.Alive)
+                            self.Draw(dummyTexture, new Vector2(RowToX(i), ColumnToY(j)), dummyRectangle, Color.Black);
+                    }
+                }   
+            });
 
             base.Draw(gameTime);
         }
