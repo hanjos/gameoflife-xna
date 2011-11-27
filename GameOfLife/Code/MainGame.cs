@@ -23,11 +23,7 @@ namespace GameOfLife
         Texture2D dummyTexture;
         Rectangle dummyRectangle;
 
-        World world;
-        TimeSpan timeOfLastTick;
-        TimeSpan tick;
         InputManager input;
-        bool running;
         
         readonly Color staticColor = Color.White;
         readonly Color runningColor = Color.Wheat;
@@ -36,15 +32,21 @@ namespace GameOfLife
         readonly int cellWidth = 16;
         readonly int cellHeight = 16;
 
+        GameState gameState;
+
         public MainGame()
         {
-            world = new World(rows, columns);
+            // game components
+            gameState = new GameState(this, new World(rows, columns));
+            Components.Add(gameState);
+
+            // rest
             input = new InputManager();
-            input.CellToggle += (sender, args) => world.Toggle(XToRow(args.Current.X), YToColumn(args.Current.Y));
+            input.CellToggle += (sender, args) => gameState.World.Toggle(XToRow(args.Current.X), YToColumn(args.Current.Y));
             input.ExecutionToggle += 
                 (sender, args) => {
-                    running = !running;
-                    timeOfLastTick = args.GameTime.TotalGameTime;
+                    gameState.Running = !gameState.Running;
+                    gameState._timeOfLastTick = args.GameTime.TotalGameTime;
                 };
             input.QuitGame += (sender, args) => Exit();
 
@@ -54,11 +56,9 @@ namespace GameOfLife
             graphics.ApplyChanges();
 
             IsMouseVisible = true;
-            running = false;
 
             dummyRectangle = new Rectangle(0, 0, cellWidth, cellHeight);
-            timeOfLastTick = TimeSpan.Zero;
-            tick = TimeSpan.FromMilliseconds(100);
+            
 
             Content.RootDirectory = "Content";
         }
@@ -106,18 +106,7 @@ namespace GameOfLife
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
-            // TODO: Add your update logic here
             input.Update(gameTime);
-
-            // generations
-            if (running)
-            {
-                if (gameTime.TotalGameTime - timeOfLastTick > tick)
-                {
-                    world.Tick();
-                    timeOfLastTick = gameTime.TotalGameTime;
-                }
-            }
 
             base.Update(gameTime);
         }
@@ -148,7 +137,7 @@ namespace GameOfLife
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(running ? runningColor : staticColor);
+            GraphicsDevice.Clear(gameState.Running ? runningColor : staticColor);
 
             // drawing the world
             spriteBatch.DrawInScope((self) => {
@@ -156,7 +145,7 @@ namespace GameOfLife
                 {
                     for (int j = 0; j < columns; j++)
                     {
-                        if (world[i, j] == World.CellState.Alive)
+                        if (gameState.World[i, j] == World.CellState.Alive)
                             self.Draw(dummyTexture, new Vector2(RowToX(i), ColumnToY(j)), dummyRectangle, Color.Black);
                     }
                 }   
