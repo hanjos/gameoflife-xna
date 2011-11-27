@@ -18,27 +18,19 @@ namespace GameOfLife
     /// </summary>
     public class MainGame : Microsoft.Xna.Framework.Game
     {
-        GraphicsDeviceManager graphics;
-        SpriteBatch spriteBatch;
-        Texture2D dummyTexture;
-        Rectangle dummyRectangle;
-
         InputManager input;
         
-        readonly Color staticColor = Color.White;
-        readonly Color runningColor = Color.Wheat;
-        readonly int rows = 25;
-        readonly int columns = 25;
-        readonly int cellWidth = 16;
-        readonly int cellHeight = 16;
-
         GameState gameState;
+        Graphics graphics;
 
         public MainGame()
         {
             // game components
-            gameState = new GameState(this, new World(rows, columns));
+            gameState = new GameState(this, new World(25, 25));
             Components.Add(gameState);
+
+            graphics = new Graphics(this);
+            Components.Add(graphics);
 
             // rest
             input = new InputManager();
@@ -50,14 +42,9 @@ namespace GameOfLife
                 };
             input.QuitGame += (sender, args) => Exit();
 
-            graphics = new GraphicsDeviceManager(this);
-            graphics.PreferredBackBufferWidth = columns * cellWidth;  // set this value to the desired width of your window
-            graphics.PreferredBackBufferHeight = rows * cellHeight;   // set this value to the desired height of your window
-            graphics.ApplyChanges();
+            
 
             IsMouseVisible = true;
-
-            dummyRectangle = new Rectangle(0, 0, cellWidth, cellHeight);
             
 
             Content.RootDirectory = "Content";
@@ -82,12 +69,7 @@ namespace GameOfLife
         /// </summary>
         protected override void LoadContent()
         {
-            // Create a new SpriteBatch, which can be used to draw textures.
-            spriteBatch = new SpriteBatch(GraphicsDevice);
-
-            // TODO: use this.Content to load your game content here
-            dummyTexture = new Texture2D(GraphicsDevice, 1, 1);
-            dummyTexture.SetData(new Color[] { Color.White });
+            // TODO: Load any non ContentManager content here
         }
 
         /// <summary>
@@ -113,22 +95,12 @@ namespace GameOfLife
 
         private int XToRow(int x)
         {
-            return (int) (x * rows / graphics.PreferredBackBufferWidth);
+            return (int) (x * gameState.World.RowCount / graphics.Width);
         }
 
         private int YToColumn(int y) 
         { 
-            return (int) (y * columns / graphics.PreferredBackBufferHeight);
-        }
-
-        private int ColumnToY(int column) 
-        {
-            return (int) (column * graphics.PreferredBackBufferHeight / columns);
-        }
-
-        private int RowToX(int row)
-        {
-            return (int)(row * graphics.PreferredBackBufferWidth / rows);
+            return (int) (y * gameState.World.ColumnCount / graphics.Height);
         }
 
         /// <summary>
@@ -137,20 +109,6 @@ namespace GameOfLife
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(gameState.Running ? runningColor : staticColor);
-
-            // drawing the world
-            spriteBatch.DrawInScope((self) => {
-                for (int i = 0; i < rows; i++)
-                {
-                    for (int j = 0; j < columns; j++)
-                    {
-                        if (gameState.World[i, j] == World.CellState.Alive)
-                            self.Draw(dummyTexture, new Vector2(RowToX(i), ColumnToY(j)), dummyRectangle, Color.Black);
-                    }
-                }   
-            });
-
             base.Draw(gameTime);
         }
     }
