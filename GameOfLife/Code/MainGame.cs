@@ -18,23 +18,12 @@ namespace GameOfLife
     /// </summary>
     public class MainGame : Microsoft.Xna.Framework.Game
     {
-        InputManager input;
-        GameState gameState;
-        Graphics graphics;
-
         public MainGame()
         {
             // game components
-            gameState = new GameState(this, new World(25, 25));
-            Components.Add(gameState);
-
-            graphics = new Graphics(this);
-            Components.Add(graphics);
-
-            input = new InputManager(this);
-            Components.Add(input);
-
-            input.QuitGame += (sender, args) => Exit();
+            Components.Add(new GameState(this, new World(25, 25)));
+            Components.Add(new Graphics(this));
+            Components.Add(new InputManager(this));
 
             // rest
             IsMouseVisible = true;

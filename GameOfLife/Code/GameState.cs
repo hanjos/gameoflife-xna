@@ -23,8 +23,6 @@ namespace GameOfLife
 
     public class GameState : Microsoft.Xna.Framework.GameComponent, IGameState
     {
-        private TimeSpan _timeOfLastTick;
-        
         public GameState(Game game, World world) : base(game)
         {
             World = world;
@@ -50,6 +48,7 @@ namespace GameOfLife
                     Running = !Running;
                     _timeOfLastTick = args.GameTime.TotalGameTime;
                 };
+            input.QuitGame += (sender, args) => Game.Exit();
             
             base.Initialize();
         }
@@ -60,13 +59,10 @@ namespace GameOfLife
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         public override void Update(GameTime gameTime)
         {
-            if (Running)
+            if (Running && gameTime.TotalGameTime - _timeOfLastTick > Tick)
             {
-                if (gameTime.TotalGameTime - _timeOfLastTick > Tick)
-                {
-                    World.Tick();
-                    _timeOfLastTick = gameTime.TotalGameTime;
-                }
+                World.Tick();
+                _timeOfLastTick = gameTime.TotalGameTime;
             }
 
             base.Update(gameTime);
@@ -93,6 +89,8 @@ namespace GameOfLife
             set { _tick = value; }
         }
         private TimeSpan _tick;
+
+        private TimeSpan _timeOfLastTick; // only for inner usage
         #endregion
     }
 }
