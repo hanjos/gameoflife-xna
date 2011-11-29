@@ -11,10 +11,8 @@ using Microsoft.Xna.Framework.Media;
 using GameOfLife.Input;
 using GameOfLife.Model;
 
-
 namespace GameOfLife
 {
-
     public interface IGameState
     {
         bool Running { get; set; }

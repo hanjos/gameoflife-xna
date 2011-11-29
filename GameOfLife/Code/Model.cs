@@ -28,13 +28,11 @@ namespace GameOfLife.Model
         #region Operations
         public void Tick()
         {
-            int rows = Cells.GetLength(0);
-            int columns = Cells.GetLength(1);
-            CellState[,] newCells = new CellState[rows, columns];
+            CellState[,] newCells = new CellState[RowCount, ColumnCount];
 
-            for (int i = 0; i < rows; i++)
+            for (int i = 0; i < RowCount; i++)
             {
-                for (int j = 0; j < columns; j++)
+                for (int j = 0; j < ColumnCount; j++)
                 {
                     int liveNeighbors = GetNeighbors(i, j).Count((cell) => cell == CellState.Alive);
 
@@ -57,31 +55,22 @@ namespace GameOfLife.Model
             Cells = newCells;
         }
 
-        public List<CellState> GetNeighbors(int i, int j)
+        public IEnumerable<CellState> GetNeighbors(int i, int j)
         {
-            List<CellState> result = new List<CellState>();
-
-            for (int ii = i - 1; ii <= i + 1; ii++) 
-            {
-                for (int jj = j - 1; jj <= j + 1; jj++)
-                {
-                    if(! InBounds(ii, jj) || (ii == i && jj == j))
-                        continue;
-
-                    result.Add(Cells[ii, jj]);
-                }
-            }
-
-            return result;
+           return 
+                from ii in Enumerable.Range(i - 1, 3)
+                from jj in Enumerable.Range(j - 1, 3)
+                where IsInBounds(ii, jj) && (ii != i || jj != j)
+                select Cells[ii, jj];
         }
 
         public void Toggle(int i, int j) 
         {
-            if(InBounds(i, j))
+            if(IsInBounds(i, j))
                 Cells[i, j] = IsAlive(i, j) ? CellState.Dead : CellState.Alive;
         }
 
-        public bool InBounds(int i, int j)
+        public bool IsInBounds(int i, int j)
         {
             return 0 <= i && i < RowCount && 0 <= j && j < ColumnCount;
         }
@@ -90,7 +79,6 @@ namespace GameOfLife.Model
         {
             return Cells[i, j] == CellState.Alive;
         }
-
         #endregion
 
         #region Properties & Fields

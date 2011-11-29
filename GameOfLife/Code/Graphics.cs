@@ -88,17 +88,18 @@ namespace GameOfLife
             GraphicsDevice.Clear(backgroundColor);
 
             // drawing the world
-            spriteBatch.DrawInScope((self) =>
-            {
+            spriteBatch.Begin();
+
                 for (int i = 0; i < gameState.World.RowCount; i++)
                 {
                     for (int j = 0; j < gameState.World.ColumnCount; j++)
                     {
                         if (gameState.World.IsAlive(i, j))
-                            self.Draw(dummyTexture, new Vector2(RowToX(i), ColumnToY(j)), dummyRectangle, Color.Black);
+                            spriteBatch.Draw(dummyTexture, new Vector2(RowToX(i), ColumnToY(j)), dummyRectangle, Color.Black);
                     }
                 }
-            });
+            
+            spriteBatch.End();
 
             base.Draw(gameTime);
         }
