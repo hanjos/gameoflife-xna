@@ -36,13 +36,8 @@ namespace GameOfLife.GameState
             game.Services.AddService(typeof(IState), this);
         }
 
-        /// <summary>
-        /// Allows the game component to perform any initialization it needs to before starting
-        /// to run.  This is where it can query for any required services and load content.
-        /// </summary>
         public override void Initialize()
         {
-            // TODO: Add your initialization code here
             IInput input = (IInput) Game.Services.GetService(typeof(IInput));
             input.ExecutionToggle +=
                 (sender, args) =>
@@ -55,10 +50,6 @@ namespace GameOfLife.GameState
             base.Initialize();
         }
 
-        /// <summary>
-        /// Allows the game component to update itself.
-        /// </summary>
-        /// <param name="gameTime">Provides a snapshot of timing values.</param>
         public override void Update(GameTime gameTime)
         {
             if (Running && gameTime.TotalGameTime - _timeOfLastTick > Tick)

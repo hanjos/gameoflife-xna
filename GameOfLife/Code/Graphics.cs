@@ -29,14 +29,8 @@ namespace GameOfLife.Graphics
             backgroundColor = staticColor;
         }
 
-        /// <summary>
-        /// Allows the game component to perform any initialization it needs to before starting
-        /// to run.  This is where it can query for any required services and load content.
-        /// </summary>
         public override void Initialize()
         {
-            // Query for the graphics device service through which the graphics device
-            // can be accessed
             IState gameState = (IState) Game.Services.GetService(typeof(IState));
 
             graphics.PreferredBackBufferWidth = gameState.World.ColumnCount * cellWidth;  // set this value to the desired width of your window
@@ -57,7 +51,7 @@ namespace GameOfLife.Graphics
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            // TODO: use this.Content to load your game content here
+            // dummy texture to paint the cells
             dummyTexture = new Texture2D(GraphicsDevice, 1, 1);
             dummyTexture.SetData(new Color[] { Color.White });
 
@@ -70,7 +64,6 @@ namespace GameOfLife.Graphics
 
             GraphicsDevice.Clear(backgroundColor);
 
-            // drawing the world
             spriteBatch.Begin();
 
                 for (int i = 0; i < gameState.World.RowCount; i++)
