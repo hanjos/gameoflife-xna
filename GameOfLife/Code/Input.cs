@@ -51,7 +51,19 @@ namespace GameOfLife.Input
             if (DetectKeyPressed(Keys.Space)(LastKeyboardState, current, gameTime))
             {
                 IState state = (IState) Game.Services.GetService(typeof(IState));
-                state.Running = !state.Running;
+                state.ToggleRunning();
+            }
+
+            if (DetectKeyPressed(Keys.Up)(LastKeyboardState, current, gameTime))
+            {
+                IState state = (IState) Game.Services.GetService(typeof(IState));
+                state.DecreaseTick();
+            }
+
+            if (DetectKeyPressed(Keys.Down)(LastKeyboardState, current, gameTime))
+            {
+                IState state = (IState)Game.Services.GetService(typeof(IState));
+                state.IncreaseTick();
             }
 
             if (DetectKeyPressed(Keys.Escape)(LastKeyboardState, current, gameTime))

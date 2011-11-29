@@ -16,11 +16,16 @@ namespace GameOfLife.GameState
     #region Game State
     public interface IState
     {
-        bool Running { get; set; }
-        World World { get; set; }
-        TimeSpan Tick { get; set; }
+        bool Running { get; }
+        World World { get; }
+        TimeSpan Tick { get; }
+
+        void ToggleRunning();
+        bool IncreaseTick();
+        bool DecreaseTick();
 
         event EventHandler<RunningToggled> RunningToggled;
+        event EventHandler<TickChanged> TickChanged;
     }
 
     public class State : Microsoft.Xna.Framework.GameComponent, IState
@@ -36,11 +41,7 @@ namespace GameOfLife.GameState
             game.Services.AddService(typeof(IState), this);
         }
 
-        public override void Initialize()
-        {
-            base.Initialize();
-        }
-
+        #region Operations
         public override void Update(GameTime gameTime)
         {
             if (Running && gameTime.TotalGameTime - _timeOfLastTick > Tick)
@@ -52,8 +53,40 @@ namespace GameOfLife.GameState
             base.Update(gameTime);
         }
 
+        public virtual void ToggleRunning()
+        {
+            Running = !Running;
+        }
+
+        public virtual bool IncreaseTick()
+        {
+            TimeSpan old = Tick;
+
+            Tick += TimeSpan.FromMilliseconds(100);
+
+            if (Tick > TimeSpan.FromMilliseconds(1000))
+                Tick = TimeSpan.FromMilliseconds(1000);
+
+            return old != Tick;
+        }
+
+        public virtual bool DecreaseTick()
+        {
+            TimeSpan old = Tick;
+
+            Tick -= TimeSpan.FromMilliseconds(100);
+
+            if (Tick < TimeSpan.FromMilliseconds(0))
+                Tick = TimeSpan.FromMilliseconds(0);
+
+            return old != Tick;
+        }
+
+        #endregion
+
         #region Events
         public event EventHandler<RunningToggled> RunningToggled;
+        public event EventHandler<TickChanged> TickChanged;
 
         // for derived classes to use
         protected virtual void RaiseRunningToggled(RunningToggled args)
@@ -61,27 +94,48 @@ namespace GameOfLife.GameState
             if (RunningToggled != null)
                 RunningToggled(this, args);
         }
+
+        protected virtual void RaiseTickChanged(TickChanged args)
+        {
+            if (TickChanged != null)
+                TickChanged(this, args);
+        }
         #endregion
 
         #region Properties & Fields
         public bool Running
         {
             get { return _running; }
-            set { _running = value; RaiseRunningToggled(new RunningToggled(value)); }
+            private set 
+            {
+                bool old = _running;
+                _running = value; 
+
+                if (old != value) 
+                    RaiseRunningToggled(new RunningToggled(value)); 
+            }
         }
         private bool _running;
 
         public World World
         {
             get { return _world; }
-            set { _world = value; }
+            private set { _world = value; }
         }
         private World _world;
 
         public TimeSpan Tick 
         {
             get { return _tick; }
-            set { _tick = value; }
+            private set 
+            {
+                if (_tick == value)
+                    return;
+
+                _tick = value;
+
+                RaiseTickChanged(new TickChanged(value));
+            }
         }
         private TimeSpan _tick;
 
@@ -98,7 +152,6 @@ namespace GameOfLife.GameState
             Current = current; 
         }
 
-        #region Properties & Fields
         public bool Current
         {
             get { return _current; }
@@ -106,7 +159,21 @@ namespace GameOfLife.GameState
         }
 
         private bool _current;
-        #endregion
+    }
+
+    public class TickChanged : EventArgs
+    {
+        public TickChanged(TimeSpan current)
+        {
+            Current = current;
+        }
+
+        public TimeSpan Current
+        {
+            get { return _current; }
+            private set { _current = value; }
+        }
+        private TimeSpan _current;
     }
     #endregion
 }
