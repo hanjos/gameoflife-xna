@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace GameOfLife
+namespace GameOfLife.Model
 {
+    public enum CellState { Alive, Dead }
+
     public class World
     {
-        public enum CellState { Alive, Dead }
-
         #region Constructors
         public World(int rows, int columns)
         { 

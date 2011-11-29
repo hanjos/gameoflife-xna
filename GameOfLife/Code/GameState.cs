@@ -9,6 +9,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 using GameOfLife.Input;
+using GameOfLife.Model;
 
 
 namespace GameOfLife

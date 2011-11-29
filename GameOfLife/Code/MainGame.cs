@@ -10,6 +10,7 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 using GameOfLife;
 using GameOfLife.Input;
+using GameOfLife.Model;
 
 namespace GameOfLife
 {
