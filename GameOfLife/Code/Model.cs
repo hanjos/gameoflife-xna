@@ -36,8 +36,7 @@ namespace GameOfLife
             {
                 for (int j = 0; j < columns; j++)
                 {
-                    List<CellState> neighbors = GetNeighbors(i, j);
-                    int liveNeighbors = neighbors.Count((cell) => cell == CellState.Alive);
+                    int liveNeighbors = GetNeighbors(i, j).Count((cell) => cell == CellState.Alive);
 
                     switch(this[i, j])
                     {
@@ -66,7 +65,7 @@ namespace GameOfLife
             {
                 for (int jj = j - 1; jj <= j + 1; jj++)
                 {
-                    if (ii < 0 || ii >= RowCount || jj < 0 || jj >= ColumnCount || (ii == i && jj == j))
+                    if(! InBounds(ii, jj) || (ii == i && jj == j))
                         continue;
 
                     result.Add(Cells[ii, jj]);
@@ -79,14 +78,17 @@ namespace GameOfLife
         public void Toggle(int i, int j) 
         {
             if(InBounds(i, j))
-                Cells[i, j] = (Cells[i, j] == CellState.Alive)
-                    ? CellState.Dead
-                    : CellState.Alive;
+                Cells[i, j] = IsAlive(i, j) ? CellState.Dead : CellState.Alive;
         }
 
         public bool InBounds(int i, int j)
         {
             return 0 <= i && i < RowCount && 0 <= j && j < ColumnCount;
+        }
+
+        public bool IsAlive(int i, int j)
+        {
+            return Cells[i, j] == CellState.Alive;
         }
 
         #endregion

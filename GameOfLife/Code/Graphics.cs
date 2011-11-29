@@ -87,7 +87,7 @@ namespace GameOfLife
                 {
                     for (int j = 0; j < gameState.World.ColumnCount; j++)
                     {
-                        if (gameState.World[i, j] == World.CellState.Alive)
+                        if (gameState.World.IsAlive(i, j))
                             self.Draw(dummyTexture, new Vector2(RowToX(i), ColumnToY(j)), dummyRectangle, Color.Black);
                     }
                 }
@@ -98,13 +98,13 @@ namespace GameOfLife
 
         private int ColumnToY(int column)
         {
-            IGameState gameState = (IGameState)Game.Services.GetService(typeof(IGameState));
+            IGameState gameState = (IGameState) Game.Services.GetService(typeof(IGameState));
             return (int)(column * graphics.PreferredBackBufferHeight / gameState.World.ColumnCount);
         }
 
         private int RowToX(int row)
         {
-            IGameState gameState = (IGameState)Game.Services.GetService(typeof(IGameState));
+            IGameState gameState = (IGameState) Game.Services.GetService(typeof(IGameState));
             return (int)(row * graphics.PreferredBackBufferWidth / gameState.World.RowCount);
         }
 
