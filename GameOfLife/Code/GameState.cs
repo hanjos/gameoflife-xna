@@ -38,15 +38,6 @@ namespace GameOfLife.GameState
 
         public override void Initialize()
         {
-            IInput input = (IInput) Game.Services.GetService(typeof(IInput));
-            input.ExecutionToggle +=
-                (sender, args) =>
-                {
-                    _timeOfLastTick = args.GameTime.TotalGameTime;
-                    Running = !Running;
-                };
-            input.QuitGame += (sender, args) => Game.Exit();
-            
             base.Initialize();
         }
 

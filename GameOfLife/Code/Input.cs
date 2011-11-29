@@ -1,15 +1,15 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using GameOfLife.Graphics;
+using GameOfLife.GameState;
 
 namespace GameOfLife.Input
 {
     #region Input Component
     public interface IInput
     {
-        event EventHandler<InputArgs<MouseState>> CellToggle;
-        event EventHandler<InputArgs<KeyboardState>> ExecutionToggle;
-        event EventHandler<InputArgs<KeyboardState>> QuitGame;
+        
     }
 
     public class InputManager : Microsoft.Xna.Framework.GameComponent, IInput
@@ -28,19 +28,18 @@ namespace GameOfLife.Input
         }
         #endregion
 
-        #region Events
-        public event EventHandler<InputArgs<MouseState>> CellToggle;
-        public event EventHandler<InputArgs<KeyboardState>> ExecutionToggle;
-        public event EventHandler<InputArgs<KeyboardState>> QuitGame;
-        #endregion
-
         #region Event Detection & Raising
         protected void CheckMouseEvents(GameTime gameTime)
         {
             MouseState current = Mouse.GetState();
 
             if (DetectMouseClicked(MouseButtons.LeftButton)(LastMouseState, current, gameTime))
-                RaiseCellToggle(new InputArgs<MouseState>(LastMouseState, current, gameTime));
+            {
+                IView view = (IView) Game.Services.GetService(typeof(IView));
+                IState state = (IState) Game.Services.GetService(typeof(IState));
+
+                state.World.Toggle(view.XToRow(current.X), view.YToColumn(current.Y));
+            }
 
             LastMouseState = current;
         }
@@ -50,10 +49,15 @@ namespace GameOfLife.Input
             KeyboardState current = Keyboard.GetState();
 
             if (DetectKeyPressed(Keys.Space)(LastKeyboardState, current, gameTime))
-                RaiseExecutionToggle(new InputArgs<KeyboardState>(LastKeyboardState, current, gameTime));
+            {
+                IState state = (IState) Game.Services.GetService(typeof(IState));
+                state.Running = !state.Running;
+            }
 
             if (DetectKeyPressed(Keys.Escape)(LastKeyboardState, current, gameTime))
-                RaiseQuitGame(new InputArgs<KeyboardState>(LastKeyboardState, current, gameTime));
+            {
+                Game.Exit();
+            }
 
             LastKeyboardState = current;
         }
@@ -66,27 +70,6 @@ namespace GameOfLife.Input
         protected Func<MouseState, MouseState, GameTime, bool> DetectMouseClicked(MouseButtons key)
         {
             return key.DetectClick;
-        }
-
-        // for derived classes to use
-        protected virtual void RaiseCellToggle(InputArgs<MouseState> args)
-        {
-            if (CellToggle != null)
-                CellToggle(this, args);
-        }
-
-        // for derived classes to use
-        protected virtual void RaiseExecutionToggle(InputArgs<KeyboardState> args)
-        {
-            if (ExecutionToggle != null)
-                ExecutionToggle(this, args);
-        }
-
-        // for derived classes to use
-        protected virtual void RaiseQuitGame(InputArgs<KeyboardState> args)
-        {
-            if (QuitGame != null)
-                QuitGame(this, args);
         }
         #endregion
 

@@ -6,10 +6,15 @@ using GameOfLife.GameState;
 
 namespace GameOfLife.Graphics
 {
-    /// <summary>
-    /// This is a game component that implements IUpdateable.
-    /// </summary>
-    public class View : Microsoft.Xna.Framework.DrawableGameComponent, IGraphicsDeviceService
+    public interface IView : IGraphicsDeviceService
+    {
+        int XToRow(int x);
+        int YToColumn(int y);
+        int RowToX(int row);
+        int ColumnToY(int column);
+    }
+    
+    public class View : Microsoft.Xna.Framework.DrawableGameComponent, IView
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
@@ -27,6 +32,9 @@ namespace GameOfLife.Graphics
             graphics = new GraphicsDeviceManager(game);
             dummyRectangle = new Rectangle(0, 0, cellWidth, cellHeight);
             backgroundColor = staticColor;
+
+            // registering itself as a service
+            game.Services.AddService(typeof(IView), this);
         }
 
         public override void Initialize()
@@ -38,10 +46,6 @@ namespace GameOfLife.Graphics
             graphics.ApplyChanges();
 
             gameState.RunningToggled += (sender, args) => backgroundColor = args.Current ? runningColor : staticColor;
-
-            IInput input = (IInput) Game.Services.GetService(typeof(IInput));
-            
-            input.CellToggle += (sender, args) => gameState.World.Toggle(XToRow(args.Current.X), YToColumn(args.Current.Y));
 
             base.Initialize();
         }
@@ -80,26 +84,26 @@ namespace GameOfLife.Graphics
             base.Draw(gameTime);
         }
 
-        #region Helper Methods
-        private int ColumnToY(int column)
+        #region IView Methods
+        public virtual int ColumnToY(int column)
         {
             IState gameState = (IState) Game.Services.GetService(typeof(IState));
             return (int)(column * graphics.PreferredBackBufferHeight / gameState.World.ColumnCount);
         }
 
-        private int RowToX(int row)
+        public virtual int RowToX(int row)
         {
             IState gameState = (IState) Game.Services.GetService(typeof(IState));
             return (int)(row * graphics.PreferredBackBufferWidth / gameState.World.RowCount);
         }
 
-        private int XToRow(int x)
+        public virtual int XToRow(int x)
         {
             IState gameState = (IState) Game.Services.GetService(typeof(IState));
             return (int)(x * gameState.World.RowCount / Width);
         }
 
-        private int YToColumn(int y)
+        public virtual int YToColumn(int y)
         {
             IState gameState = (IState) Game.Services.GetService(typeof(IState));
             return (int)(y * gameState.World.ColumnCount / Height);
