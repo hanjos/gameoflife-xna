@@ -8,7 +8,7 @@ using Microsoft.Xna.Framework.GamerServices;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
-
+using GameOfLife.Input;
 
 namespace GameOfLife
 {
@@ -21,6 +21,7 @@ namespace GameOfLife
         SpriteBatch spriteBatch;
         Texture2D dummyTexture;
         Rectangle dummyRectangle;
+        Color backgroundColor;
 
         readonly Color staticColor = Color.White;
         readonly Color runningColor = Color.Wheat;
@@ -31,6 +32,7 @@ namespace GameOfLife
         {
             graphics = new GraphicsDeviceManager(game);
             dummyRectangle = new Rectangle(0, 0, cellWidth, cellHeight);
+            backgroundColor = staticColor;
         }
 
         /// <summary>
@@ -47,6 +49,11 @@ namespace GameOfLife
             graphics.PreferredBackBufferWidth = gameState.World.ColumnCount * cellWidth;  // set this value to the desired width of your window
             graphics.PreferredBackBufferHeight = gameState.World.RowCount * cellHeight;   // set this value to the desired height of your window
             graphics.ApplyChanges();
+
+            IInput input = (IInput) Game.Services.GetService(typeof(IInput));
+            
+            input.CellToggle += (sender, args) => gameState.World.Toggle(XToRow(args.Current.X), YToColumn(args.Current.Y));
+            input.ExecutionToggle += (sender, args) => backgroundColor = gameState.Running ? runningColor : staticColor;
 
             base.Initialize();
         }
@@ -76,9 +83,9 @@ namespace GameOfLife
 
         public override void Draw(GameTime gameTime)
         {
-            IGameState gameState = (IGameState)Game.Services.GetService(typeof(IGameState));
+            IGameState gameState = (IGameState) Game.Services.GetService(typeof(IGameState));
 
-            GraphicsDevice.Clear(gameState.Running ? runningColor : staticColor);
+            GraphicsDevice.Clear(backgroundColor);
 
             // drawing the world
             spriteBatch.DrawInScope((self) =>
@@ -106,6 +113,18 @@ namespace GameOfLife
         {
             IGameState gameState = (IGameState) Game.Services.GetService(typeof(IGameState));
             return (int)(row * graphics.PreferredBackBufferWidth / gameState.World.RowCount);
+        }
+
+        private int XToRow(int x)
+        {
+            IGameState gameState = (IGameState) Game.Services.GetService(typeof(IGameState));
+            return (int)(x * gameState.World.RowCount / Width);
+        }
+
+        private int YToColumn(int y)
+        {
+            IGameState gameState = (IGameState) Game.Services.GetService(typeof(IGameState));
+            return (int)(y * gameState.World.ColumnCount / Height);
         }
 
         #region Events That Should've Have Been Inherited

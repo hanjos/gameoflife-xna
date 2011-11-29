@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework.GamerServices;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
+using GameOfLife.Input;
 
 
 namespace GameOfLife
@@ -22,7 +23,7 @@ namespace GameOfLife
 
     public class GameState : Microsoft.Xna.Framework.GameComponent, IGameState
     {
-        public TimeSpan _timeOfLastTick; // HACK!
+        private TimeSpan _timeOfLastTick;
         
         public GameState(Game game, World world) : base(game)
         {
@@ -42,7 +43,14 @@ namespace GameOfLife
         public override void Initialize()
         {
             // TODO: Add your initialization code here
-
+            IInput input = (IInput) Game.Services.GetService(typeof(IInput));
+            input.ExecutionToggle +=
+                (sender, args) =>
+                {
+                    Running = !Running;
+                    _timeOfLastTick = args.GameTime.TotalGameTime;
+                };
+            
             base.Initialize();
         }
 

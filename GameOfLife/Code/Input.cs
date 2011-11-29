@@ -9,10 +9,24 @@ namespace GameOfLife
 {
     namespace Input
     {
-        public class InputManager
+        #region Input Component
+        public interface IInput
         {
+            event EventHandler<InputEventArgs<MouseState>> CellToggle;
+            event EventHandler<InputEventArgs<KeyboardState>> ExecutionToggle;
+            event EventHandler<InputEventArgs<KeyboardState>> QuitGame;
+        }
+
+        public class InputManager : Microsoft.Xna.Framework.GameComponent, IInput
+        {
+            public InputManager(Game game) : base(game)
+            {
+                // registering itself as a service
+                game.Services.AddService(typeof(IInput), this);
+            }
+
             #region Operations
-            public virtual void Update(GameTime gameTime)
+            public override void Update(GameTime gameTime)
             {
                 CheckMouseEvents(gameTime);
                 CheckKeyboardEvents(gameTime);
@@ -23,7 +37,9 @@ namespace GameOfLife
             public event EventHandler<InputEventArgs<MouseState>> CellToggle;
             public event EventHandler<InputEventArgs<KeyboardState>> ExecutionToggle;
             public event EventHandler<InputEventArgs<KeyboardState>> QuitGame;
+            #endregion
 
+            #region Event Detection & Raising
             protected void CheckMouseEvents(GameTime gameTime)
             {
                 MouseState current = Mouse.GetState();
@@ -96,7 +112,9 @@ namespace GameOfLife
             private KeyboardState lastKeyboardState_;
             #endregion
         }
+        #endregion
 
+        #region Mouse Button Abstraction
         public abstract class MouseButtons
         {
             public static readonly MouseButtons LeftButton = new LeftButtonMouseButtons();
@@ -129,6 +147,7 @@ namespace GameOfLife
                 }
             }
         }
+        #endregion
 
         #region Event Args
         public class InputEventArgs<T> : EventArgs

@@ -19,7 +19,6 @@ namespace GameOfLife
     public class MainGame : Microsoft.Xna.Framework.Game
     {
         InputManager input;
-        
         GameState gameState;
         Graphics graphics;
 
@@ -32,21 +31,14 @@ namespace GameOfLife
             graphics = new Graphics(this);
             Components.Add(graphics);
 
-            // rest
-            input = new InputManager();
-            input.CellToggle += (sender, args) => gameState.World.Toggle(XToRow(args.Current.X), YToColumn(args.Current.Y));
-            input.ExecutionToggle += 
-                (sender, args) => {
-                    gameState.Running = !gameState.Running;
-                    gameState._timeOfLastTick = args.GameTime.TotalGameTime;
-                };
+            input = new InputManager(this);
+            Components.Add(input);
+
             input.QuitGame += (sender, args) => Exit();
 
-            
-
+            // rest
             IsMouseVisible = true;
             
-
             Content.RootDirectory = "Content";
         }
 
@@ -88,19 +80,7 @@ namespace GameOfLife
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
-            input.Update(gameTime);
-
             base.Update(gameTime);
-        }
-
-        private int XToRow(int x)
-        {
-            return (int) (x * gameState.World.RowCount / graphics.Width);
-        }
-
-        private int YToColumn(int y) 
-        { 
-            return (int) (y * gameState.World.ColumnCount / graphics.Height);
         }
 
         /// <summary>
