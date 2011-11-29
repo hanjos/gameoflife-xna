@@ -2,6 +2,7 @@
 using GameOfLife.Graphics;
 using GameOfLife.Input;
 using GameOfLife.Model;
+using GameOfLife.GameState;
 
 namespace GameOfLife
 {
@@ -13,7 +14,7 @@ namespace GameOfLife
         public MainGame()
         {
             // game components
-            Components.Add(new GameState(this, new World(25, 25)));
+            Components.Add(new State(this, new World(25, 25)));
             Components.Add(new View(this));
             Components.Add(new InputManager(this));
 

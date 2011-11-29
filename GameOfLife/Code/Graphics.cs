@@ -1,14 +1,8 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Audio;
-using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.GamerServices;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework.Media;
 using GameOfLife.Input;
+using GameOfLife.GameState;
 
 namespace GameOfLife.Graphics
 {
@@ -43,16 +37,17 @@ namespace GameOfLife.Graphics
         {
             // Query for the graphics device service through which the graphics device
             // can be accessed
-            IGameState gameState = (IGameState) Game.Services.GetService(typeof(IGameState));
+            IState gameState = (IState) Game.Services.GetService(typeof(IState));
 
             graphics.PreferredBackBufferWidth = gameState.World.ColumnCount * cellWidth;  // set this value to the desired width of your window
             graphics.PreferredBackBufferHeight = gameState.World.RowCount * cellHeight;   // set this value to the desired height of your window
             graphics.ApplyChanges();
 
+            gameState.RunningToggled += (sender, args) => backgroundColor = args.Current ? runningColor : staticColor;
+
             IInput input = (IInput) Game.Services.GetService(typeof(IInput));
             
             input.CellToggle += (sender, args) => gameState.World.Toggle(XToRow(args.Current.X), YToColumn(args.Current.Y));
-            input.ExecutionToggle += (sender, args) => backgroundColor = gameState.Running ? runningColor : staticColor;
 
             base.Initialize();
         }
@@ -71,7 +66,7 @@ namespace GameOfLife.Graphics
 
         public override void Draw(GameTime gameTime)
         {
-            IGameState gameState = (IGameState) Game.Services.GetService(typeof(IGameState));
+            IState gameState = (IState) Game.Services.GetService(typeof(IState));
 
             GraphicsDevice.Clear(backgroundColor);
 
@@ -95,25 +90,25 @@ namespace GameOfLife.Graphics
         #region Helper Methods
         private int ColumnToY(int column)
         {
-            IGameState gameState = (IGameState) Game.Services.GetService(typeof(IGameState));
+            IState gameState = (IState) Game.Services.GetService(typeof(IState));
             return (int)(column * graphics.PreferredBackBufferHeight / gameState.World.ColumnCount);
         }
 
         private int RowToX(int row)
         {
-            IGameState gameState = (IGameState) Game.Services.GetService(typeof(IGameState));
+            IState gameState = (IState) Game.Services.GetService(typeof(IState));
             return (int)(row * graphics.PreferredBackBufferWidth / gameState.World.RowCount);
         }
 
         private int XToRow(int x)
         {
-            IGameState gameState = (IGameState) Game.Services.GetService(typeof(IGameState));
+            IState gameState = (IState) Game.Services.GetService(typeof(IState));
             return (int)(x * gameState.World.RowCount / Width);
         }
 
         private int YToColumn(int y)
         {
-            IGameState gameState = (IGameState) Game.Services.GetService(typeof(IGameState));
+            IState gameState = (IState) Game.Services.GetService(typeof(IState));
             return (int)(y * gameState.World.ColumnCount / Height);
         }
         #endregion

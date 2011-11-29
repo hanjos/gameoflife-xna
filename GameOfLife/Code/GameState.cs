@@ -11,18 +11,21 @@ using Microsoft.Xna.Framework.Media;
 using GameOfLife.Input;
 using GameOfLife.Model;
 
-namespace GameOfLife
+namespace GameOfLife.GameState
 {
-    public interface IGameState
+    #region Game State
+    public interface IState
     {
         bool Running { get; set; }
         World World { get; set; }
         TimeSpan Tick { get; set; }
+
+        event EventHandler<RunningToggled> RunningToggled;
     }
 
-    public class GameState : Microsoft.Xna.Framework.GameComponent, IGameState
+    public class State : Microsoft.Xna.Framework.GameComponent, IState
     {
-        public GameState(Game game, World world) : base(game)
+        public State(Game game, World world) : base(game)
         {
             World = world;
             Running = false;
@@ -30,7 +33,7 @@ namespace GameOfLife
             Tick = TimeSpan.FromMilliseconds(100);
 
             // registering itself as a service
-            game.Services.AddService(typeof(IGameState), this);
+            game.Services.AddService(typeof(IState), this);
         }
 
         /// <summary>
@@ -44,8 +47,8 @@ namespace GameOfLife
             input.ExecutionToggle +=
                 (sender, args) =>
                 {
-                    Running = !Running;
                     _timeOfLastTick = args.GameTime.TotalGameTime;
+                    Running = !Running;
                 };
             input.QuitGame += (sender, args) => Game.Exit();
             
@@ -67,11 +70,22 @@ namespace GameOfLife
             base.Update(gameTime);
         }
 
+        #region Events
+        public event EventHandler<RunningToggled> RunningToggled;
+
+        // for derived classes to use
+        protected virtual void RaiseRunningToggled(RunningToggled args)
+        {
+            if (RunningToggled != null)
+                RunningToggled(this, args);
+        }
+        #endregion
+
         #region Properties & Fields
         public bool Running
         {
             get { return _running; }
-            set { _running = value; }
+            set { _running = value; RaiseRunningToggled(new RunningToggled(value)); }
         }
         private bool _running;
 
@@ -92,4 +106,25 @@ namespace GameOfLife
         private TimeSpan _timeOfLastTick; // only for inner usage
         #endregion
     }
+    #endregion
+
+    #region Event Args
+    public class RunningToggled : EventArgs
+    {
+        public RunningToggled(bool current)
+        { 
+            Current = current; 
+        }
+
+        #region Properties & Fields
+        public bool Current
+        {
+            get { return _current; }
+            private set { _current = value; }
+        }
+
+        private bool _current;
+        #endregion
+    }
+    #endregion
 }
