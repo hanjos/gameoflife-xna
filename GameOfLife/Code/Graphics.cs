@@ -10,12 +10,12 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 using GameOfLife.Input;
 
-namespace GameOfLife
+namespace GameOfLife.Graphics
 {
     /// <summary>
     /// This is a game component that implements IUpdateable.
     /// </summary>
-    public class Graphics : Microsoft.Xna.Framework.DrawableGameComponent, IGraphicsDeviceService
+    public class View : Microsoft.Xna.Framework.DrawableGameComponent, IGraphicsDeviceService
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
@@ -28,7 +28,7 @@ namespace GameOfLife
         readonly int cellWidth = 16;
         readonly int cellHeight = 16;
 
-        public Graphics(Game game) : base(game)
+        public View(Game game) : base(game)
         {
             graphics = new GraphicsDeviceManager(game);
             dummyRectangle = new Rectangle(0, 0, cellWidth, cellHeight);
@@ -41,7 +41,6 @@ namespace GameOfLife
         /// </summary>
         public override void Initialize()
         {
-            // TODO: Add your initialization code here
             // Query for the graphics device service through which the graphics device
             // can be accessed
             IGameState gameState = (IGameState) Game.Services.GetService(typeof(IGameState));
@@ -70,17 +69,6 @@ namespace GameOfLife
             base.LoadContent();
         }
 
-        /// <summary>
-        /// Allows the game component to update itself.
-        /// </summary>
-        /// <param name="gameTime">Provides a snapshot of timing values.</param>
-        public override void Update(GameTime gameTime)
-        {
-            // TODO: Add your update code here
-
-            base.Update(gameTime);
-        }
-
         public override void Draw(GameTime gameTime)
         {
             IGameState gameState = (IGameState) Game.Services.GetService(typeof(IGameState));
@@ -104,6 +92,7 @@ namespace GameOfLife
             base.Draw(gameTime);
         }
 
+        #region Helper Methods
         private int ColumnToY(int column)
         {
             IGameState gameState = (IGameState) Game.Services.GetService(typeof(IGameState));
@@ -127,6 +116,7 @@ namespace GameOfLife
             IGameState gameState = (IGameState) Game.Services.GetService(typeof(IGameState));
             return (int)(y * gameState.World.ColumnCount / Height);
         }
+        #endregion
 
         #region Events That Should've Have Been Inherited
         public event EventHandler<EventArgs> DeviceCreated;

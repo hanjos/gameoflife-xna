@@ -1,5 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
-using GameOfLife;
+using GameOfLife.Graphics;
 using GameOfLife.Input;
 using GameOfLife.Model;
 
@@ -14,7 +14,7 @@ namespace GameOfLife
         {
             // game components
             Components.Add(new GameState(this, new World(25, 25)));
-            Components.Add(new Graphics(this));
+            Components.Add(new View(this));
             Components.Add(new InputManager(this));
 
             // rest
