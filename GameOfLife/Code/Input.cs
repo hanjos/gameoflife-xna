@@ -11,7 +11,12 @@ namespace GameOfLife.Input
     public interface IInput
     {
         void Register(Keys key, Action<KeyboardState, GameTime> action);
+        void Swap(Keys from, Keys to);
+        Action<KeyboardState, GameTime> Unregister(Keys key);
+        
         void Register(MouseButtons mouseButton, Action<MouseState, GameTime> action);
+        void Swap(MouseButtons from, MouseButtons to);
+        Action<MouseState, GameTime> Unregister(MouseButtons mouseButton);
     }
 
     public class InputManager : Microsoft.Xna.Framework.GameComponent, IInput
@@ -40,6 +45,56 @@ namespace GameOfLife.Input
         public virtual void Register(MouseButtons mouseButton, Action<MouseState, GameTime> action)
         {
             _mouseInput[mouseButton] = action;
+        }
+
+        public virtual Action<KeyboardState, GameTime> Unregister(Keys key)
+        {
+            if (key == null) // do nothing
+                return null; 
+
+            Action<KeyboardState, GameTime> action = _keyboardInput[key];
+            _keyboardInput.Remove(key);
+
+            return action;
+        }
+
+        public virtual Action<MouseState, GameTime> Unregister(MouseButtons mouseButton)
+        {
+            if (mouseButton == null) // do nothing
+                return null;
+
+            Action<MouseState, GameTime> action = _mouseInput[mouseButton];
+            _mouseInput.Remove(mouseButton);
+
+            return action;
+        }
+
+        public virtual void Swap(Keys from, Keys to)
+        {
+            if (from == null || from == to || !_keyboardInput.ContainsKey(from)) // do nothing
+                return;
+
+            if (to == null) // remove from's binding, if it exists
+            {
+                Unregister(from);
+                return;
+            }
+
+            Register(to, Unregister(from));
+        }
+
+        public virtual void Swap(MouseButtons from, MouseButtons to)
+        {
+            if (from == null || from == to || !_mouseInput.ContainsKey(from)) // do nothing
+                return;
+
+            if (to == null) // remove from's binding, if it exists
+            {
+                Unregister(from);
+                return;
+            }
+
+            Register(to, Unregister(from));
         }
         #endregion
 
