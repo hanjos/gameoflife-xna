@@ -11,6 +11,7 @@ using Microsoft.Xna.Framework.Media;
 using GameOfLife.Input;
 using GameOfLife.Model;
 using GameOfLife.Utilities;
+using GameOfLife.Settings;
 
 namespace GameOfLife.GameState
 {
@@ -31,16 +32,26 @@ namespace GameOfLife.GameState
 
     public class State : Microsoft.Xna.Framework.GameComponent, IState
     {
-        public State(Game game, World world) : base(game)
+        #region Constructors & Initialization
+        public State(Game game) : base(game)
         {
-            World = world;
-            Running = false;
-            Tick = TimeSpan.FromMilliseconds(100);
             _timeOfLastTick = TimeSpan.Zero;
             
             // registering itself as a service
             game.Services.AddService(typeof(IState), this);
         }
+
+        public override void Initialize()
+        {
+            ISettings settings = (ISettings) Game.Services.GetService(typeof(ISettings));
+
+            World = new World(settings.Rows, settings.Columns);
+            Tick = settings.Tick;
+            Running = settings.StartRunning;
+
+            base.Initialize();
+        }
+        #endregion
 
         #region Operations
         public override void Update(GameTime gameTime)
@@ -76,7 +87,6 @@ namespace GameOfLife.GameState
 
             return old != Tick;
         }
-
         #endregion
 
         #region Events

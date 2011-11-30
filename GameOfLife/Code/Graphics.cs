@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using GameOfLife.Input;
 using GameOfLife.GameState;
+using GameOfLife.Settings;
 
 namespace GameOfLife.Graphics
 {
@@ -46,6 +47,9 @@ namespace GameOfLife.Graphics
             graphics.ApplyChanges();
 
             gameState.RunningToggled += (sender, args) => backgroundColor = args.Current ? runningColor : staticColor;
+
+            ISettings settings = (ISettings) Game.Services.GetService(typeof(ISettings));
+            backgroundColor = settings.StartRunning ? runningColor : staticColor;
 
             base.Initialize();
         }

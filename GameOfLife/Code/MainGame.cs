@@ -3,6 +3,7 @@ using GameOfLife.Graphics;
 using GameOfLife.Input;
 using GameOfLife.Model;
 using GameOfLife.GameState;
+using GameOfLife.Settings;
 using Microsoft.Xna.Framework.Input;
 
 namespace GameOfLife
@@ -12,7 +13,8 @@ namespace GameOfLife
         public MainGame()
         {
             // game components
-            Components.Add(new State(this, new World(25, 25)));
+            Components.Add(new DefaultSettings(this));
+            Components.Add(new State(this));
             Components.Add(new View(this));
             Components.Add(new InputManager(this));
 

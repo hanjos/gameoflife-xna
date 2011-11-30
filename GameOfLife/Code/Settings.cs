@@ -1,0 +1,65 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
+using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.GamerServices;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Media;
+
+namespace GameOfLife.Settings
+{
+    public interface ISettings
+    {
+        int Rows { get; }
+        int Columns { get; }
+        TimeSpan Tick { get; }
+        bool StartRunning { get; }
+    }
+
+    public class DefaultSettings : Microsoft.Xna.Framework.GameComponent, ISettings
+    {
+        public DefaultSettings(Game game) : base(game)
+        {
+            Rows = 25;
+            Columns = 25;
+            Tick = TimeSpan.FromMilliseconds(100);
+            StartRunning = false;
+
+            // registering the services
+            game.Services.AddService(typeof(ISettings), this);
+        }
+
+        #region ISettings
+        public int Rows
+        {
+            get { return _rows; }
+            private set { _rows = value; }
+        }
+        private int _rows;
+
+        public int Columns
+        {
+            get { return _columns; }
+            private set { _columns = value; }
+        }
+        private int _columns;
+
+        public TimeSpan Tick
+        {
+            get { return _tick; }
+            private set { _tick = value; }
+        }
+        private TimeSpan _tick;
+
+        public bool StartRunning
+        {
+            get { return _startRunning; }
+            private set { _startRunning = value; }
+        }
+        private bool _startRunning;
+        #endregion
+    }
+}
