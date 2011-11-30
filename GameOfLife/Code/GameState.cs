@@ -10,6 +10,7 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 using GameOfLife.Input;
 using GameOfLife.Model;
+using GameOfLife.Utilities;
 
 namespace GameOfLife.GameState
 {
@@ -62,10 +63,7 @@ namespace GameOfLife.GameState
         {
             TimeSpan old = Tick;
 
-            Tick += TimeSpan.FromMilliseconds(100);
-
-            if (Tick > TimeSpan.FromMilliseconds(1000))
-                Tick = TimeSpan.FromMilliseconds(1000);
+            Tick = TimeSpanUtils.Min(Tick + TimeSpan.FromMilliseconds(100), TimeSpan.FromMilliseconds(1000));
 
             return old != Tick;
         }
@@ -74,10 +72,7 @@ namespace GameOfLife.GameState
         {
             TimeSpan old = Tick;
 
-            Tick -= TimeSpan.FromMilliseconds(100);
-
-            if (Tick < TimeSpan.FromMilliseconds(0))
-                Tick = TimeSpan.FromMilliseconds(0);
+            Tick = TimeSpanUtils.Max(Tick - TimeSpan.FromMilliseconds(100), TimeSpan.FromMilliseconds(0));
 
             return old != Tick;
         }
@@ -108,11 +103,12 @@ namespace GameOfLife.GameState
             get { return _running; }
             private set 
             {
-                bool old = _running;
-                _running = value; 
+                if (_running == value)
+                    return;
 
-                if (old != value) 
-                    RaiseRunningToggled(new RunningToggled(value)); 
+                _running = value;
+
+                RaiseRunningToggled(new RunningToggled(value)); 
             }
         }
         private bool _running;
