@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework.GamerServices;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
+using Scripts;
 
 namespace GameOfLife.Settings
 {
@@ -26,6 +27,16 @@ namespace GameOfLife.Settings
             // registering the services
             game.Services.AddService(typeof(ISettings), this);
         }
+
+        #region Operations
+        public void LoadFrom(Config config)
+        {
+            Rows = config.Rows;
+            Columns = config.Columns;
+            Tick = TimeSpan.FromMilliseconds(config.TickInMilliseconds);
+            StartRunning = config.StartRunning;
+        }
+        #endregion
 
         #region ISettings
         public int Rows

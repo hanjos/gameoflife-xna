@@ -12,15 +12,18 @@ namespace GameOfLife
 {
     public class MainGame : Microsoft.Xna.Framework.Game
     {
+        #region Initialization
         public MainGame()
         {
             // game components
             settings = new DefaultSettings(this);
             Components.Add(settings);
 
+            input = new InputManager(this);
+            Components.Add(input);
+
             Components.Add(new State(this));
             Components.Add(new View(this));
-            Components.Add(new InputManager(this));
 
             // rest
             IsMouseVisible = true;
@@ -30,14 +33,12 @@ namespace GameOfLife
 
         protected override void Initialize()
         {
+            // extracting config.xml's data, and making it available via Settings
             Config config = Content.Load<Config>("config");
-            settings.Rows = config.Rows;
-            settings.Columns = config.Columns;
-            settings.Tick = TimeSpan.FromMilliseconds(config.TickInMilliseconds);
-            settings.StartRunning = config.StartRunning;
+
+            settings.LoadFrom(config);
 
             // setting up the input
-            IInput input = (IInput) Services.GetService(typeof(IInput));
             input.Register(
                 MouseButtons.LeftButton,
                 (current, gameTime) =>
@@ -79,15 +80,14 @@ namespace GameOfLife
                     Exit();
                 });
 
+            // now we can initialize everybody
             base.Initialize();
         }
+        #endregion
 
-        protected override void LoadContent()
-        {
-            
-            base.LoadContent();
-        }
-
+        #region Fields
         private DefaultSettings settings;
+        private InputManager input;
+        #endregion
     }
 }
