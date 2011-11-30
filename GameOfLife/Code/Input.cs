@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using GameOfLife.Graphics;
@@ -9,13 +10,17 @@ namespace GameOfLife.Input
     #region Input Component
     public interface IInput
     {
-        
+        void Register(Keys key, Action<KeyboardState, GameTime> action);
+        void Register(MouseButtons mouseButton, Action<MouseState, GameTime> action);
     }
 
     public class InputManager : Microsoft.Xna.Framework.GameComponent, IInput
     {
         public InputManager(Game game) : base(game)
         {
+            _keyboardInput = new Dictionary<Keys, Action<KeyboardState, GameTime>>();
+            _mouseInput = new Dictionary<MouseButtons, Action<MouseState, GameTime>>();
+
             // registering itself as a service
             game.Services.AddService(typeof(IInput), this);
         }
@@ -26,6 +31,16 @@ namespace GameOfLife.Input
             CheckMouseEvents(gameTime);
             CheckKeyboardEvents(gameTime);
         }
+
+        public virtual void Register(Keys key, Action<KeyboardState, GameTime> action)
+        {
+            _keyboardInput[key] = action;
+        }
+
+        public virtual void Register(MouseButtons mouseButton, Action<MouseState, GameTime> action)
+        {
+            _mouseInput[mouseButton] = action;
+        }
         #endregion
 
         #region Event Detection & Raising
@@ -33,12 +48,12 @@ namespace GameOfLife.Input
         {
             MouseState current = Mouse.GetState();
 
-            if (DetectMouseClicked(MouseButtons.LeftButton)(LastMouseState, current, gameTime))
+            foreach (var entry in _mouseInput)
             {
-                IView view = (IView) Game.Services.GetService(typeof(IView));
-                IState state = (IState) Game.Services.GetService(typeof(IState));
-
-                state.World.Toggle(view.XToRow(current.X), view.YToColumn(current.Y));
+                if (DetectMouseClicked(entry.Key)(LastMouseState, current, gameTime))
+                {
+                    entry.Value(current, gameTime);
+                }
             }
 
             LastMouseState = current;
@@ -48,27 +63,12 @@ namespace GameOfLife.Input
         {
             KeyboardState current = Keyboard.GetState();
 
-            if (DetectKeyPressed(Keys.Space)(LastKeyboardState, current, gameTime))
+            foreach (var entry in _keyboardInput)
             {
-                IState state = (IState) Game.Services.GetService(typeof(IState));
-                state.ToggleRunning();
-            }
-
-            if (DetectKeyPressed(Keys.Up)(LastKeyboardState, current, gameTime))
-            {
-                IState state = (IState) Game.Services.GetService(typeof(IState));
-                state.DecreaseTick();
-            }
-
-            if (DetectKeyPressed(Keys.Down)(LastKeyboardState, current, gameTime))
-            {
-                IState state = (IState)Game.Services.GetService(typeof(IState));
-                state.IncreaseTick();
-            }
-
-            if (DetectKeyPressed(Keys.Escape)(LastKeyboardState, current, gameTime))
-            {
-                Game.Exit();
+                if (DetectKeyPressed(entry.Key)(LastKeyboardState, current, gameTime))
+                {
+                    entry.Value(current, gameTime);
+                }
             }
 
             LastKeyboardState = current;
@@ -88,18 +88,20 @@ namespace GameOfLife.Input
         #region Properties & Fields
         private MouseState LastMouseState
         {
-            get { if (lastMouseState_ == null) lastMouseState_ = Mouse.GetState(); return lastMouseState_; }
-            set { lastMouseState_ = value; }
+            get { if (_lastMouseState == null) _lastMouseState = Mouse.GetState(); return _lastMouseState; }
+            set { _lastMouseState = value; }
         }
-
+        private MouseState _lastMouseState;
+        
         private KeyboardState LastKeyboardState
         {
-            get { if (lastKeyboardState_ == null) lastKeyboardState_ = Keyboard.GetState(); return lastKeyboardState_; }
-            set { lastKeyboardState_ = value; }
+            get { if (_lastKeyboardState == null) _lastKeyboardState = Keyboard.GetState(); return _lastKeyboardState; }
+            set { _lastKeyboardState = value; }
         }
+        private KeyboardState _lastKeyboardState;
 
-        private MouseState lastMouseState_;
-        private KeyboardState lastKeyboardState_;
+        private IDictionary<MouseButtons, Action<MouseState, GameTime>> _mouseInput;
+        private IDictionary<Keys, Action<KeyboardState, GameTime>> _keyboardInput;
         #endregion
     }
     #endregion
