@@ -5,6 +5,8 @@ using GameOfLife.Model;
 using GameOfLife.GameState;
 using GameOfLife.Settings;
 using Microsoft.Xna.Framework.Input;
+using Scripts;
+using System;
 
 namespace GameOfLife
 {
@@ -13,7 +15,9 @@ namespace GameOfLife
         public MainGame()
         {
             // game components
-            Components.Add(new DefaultSettings(this));
+            settings = new DefaultSettings(this);
+            Components.Add(settings);
+
             Components.Add(new State(this));
             Components.Add(new View(this));
             Components.Add(new InputManager(this));
@@ -26,6 +30,12 @@ namespace GameOfLife
 
         protected override void Initialize()
         {
+            Config config = Content.Load<Config>("config");
+            settings.Rows = config.Rows;
+            settings.Columns = config.Columns;
+            settings.Tick = TimeSpan.FromMilliseconds(config.TickInMilliseconds);
+            settings.StartRunning = config.StartRunning;
+
             // setting up the input
             IInput input = (IInput) Services.GetService(typeof(IInput));
             input.Register(
@@ -71,5 +81,13 @@ namespace GameOfLife
 
             base.Initialize();
         }
+
+        protected override void LoadContent()
+        {
+            
+            base.LoadContent();
+        }
+
+        private DefaultSettings settings;
     }
 }

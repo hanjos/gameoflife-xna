@@ -23,11 +23,6 @@ namespace GameOfLife.Settings
     {
         public DefaultSettings(Game game) : base(game)
         {
-            Rows = 25;
-            Columns = 25;
-            Tick = TimeSpan.FromMilliseconds(100);
-            StartRunning = false;
-
             // registering the services
             game.Services.AddService(typeof(ISettings), this);
         }
@@ -36,28 +31,28 @@ namespace GameOfLife.Settings
         public int Rows
         {
             get { return _rows; }
-            private set { _rows = value; }
+            set { _rows = value; }
         }
         private int _rows;
 
         public int Columns
         {
             get { return _columns; }
-            private set { _columns = value; }
+            set { _columns = value; }
         }
         private int _columns;
 
         public TimeSpan Tick
         {
             get { return _tick; }
-            private set { _tick = value; }
+            set { _tick = value; }
         }
         private TimeSpan _tick;
 
         public bool StartRunning
         {
             get { return _startRunning; }
-            private set { _startRunning = value; }
+            set { _startRunning = value; }
         }
         private bool _startRunning;
         #endregion

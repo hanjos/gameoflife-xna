@@ -5,6 +5,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Code", "GameOfLife\Code\Cod
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Content", "GameOfLife\Content\Content.contentproj", "{CDBE7002-0CBD-4580-ABF9-A64303E10A01}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Scripts", "Scripts\Scripts.csproj", "{68DBBECC-846A-4E46-8C43-EF2FA3F9965F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x86 = Debug|x86
@@ -17,6 +19,10 @@ Global
 		{A3536AA4-3DF6-4CE6-89C0-E4FBBC14293D}.Release|x86.Build.0 = Release|x86
 		{CDBE7002-0CBD-4580-ABF9-A64303E10A01}.Debug|x86.ActiveCfg = Debug|x86
 		{CDBE7002-0CBD-4580-ABF9-A64303E10A01}.Release|x86.ActiveCfg = Release|x86
+		{68DBBECC-846A-4E46-8C43-EF2FA3F9965F}.Debug|x86.ActiveCfg = Debug|x86
+		{68DBBECC-846A-4E46-8C43-EF2FA3F9965F}.Debug|x86.Build.0 = Debug|x86
+		{68DBBECC-846A-4E46-8C43-EF2FA3F9965F}.Release|x86.ActiveCfg = Release|x86
+		{68DBBECC-846A-4E46-8C43-EF2FA3F9965F}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
