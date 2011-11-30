@@ -140,41 +140,5 @@ namespace GameOfLife.Input
         }
     }
     #endregion
-
-    #region Event Args
-    public class InputArgs<T> : EventArgs
-    {
-        public InputArgs(T last, T current, GameTime gameTime)
-        {
-            Last = last;
-            Current = current;
-            GameTime = gameTime;
-        }
-
-        #region Properties & Fields
-        private T last;
-        private T current;
-        private GameTime gameTime;
-
-        public T Last
-        {
-            get { return last; }
-            private set { last = value; }
-        }
-
-        public T Current
-        {
-            get { return current; }
-            private set { current = value; }
-        }
-
-        public GameTime GameTime
-        {
-            get { return gameTime; }
-            private set { gameTime = value; }
-        }
-        #endregion
-    }
-    #endregion
 }
 

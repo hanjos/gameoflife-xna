@@ -35,9 +35,9 @@ namespace GameOfLife.GameState
         {
             World = world;
             Running = false;
-            _timeOfLastTick = TimeSpan.Zero;
             Tick = TimeSpan.FromMilliseconds(100);
-
+            _timeOfLastTick = TimeSpan.Zero;
+            
             // registering itself as a service
             game.Services.AddService(typeof(IState), this);
         }
