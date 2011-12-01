@@ -17,5 +17,12 @@ namespace Scripts
         public int Columns;
         public int TickInMilliseconds;
         public bool StartRunning;
+        public Input[] Inputs;
+    }
+
+    public class Input
+    {
+        public string Key;
+        public string Command;
     }
 }

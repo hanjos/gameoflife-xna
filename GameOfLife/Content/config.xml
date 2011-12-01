@@ -5,5 +5,27 @@
     <Columns>25</Columns>
     <TickInMilliseconds>100</TickInMilliseconds>
     <StartRunning>false</StartRunning>
+    <Inputs>
+      <Item>
+        <Key>Esc</Key>
+        <Command>Quit</Command>
+      </Item>
+      <Item>
+        <Key>Space</Key>
+        <Command>Toggle</Command>
+      </Item>
+      <Item>
+        <Key>Up</Key>
+        <Command>DecreaseTick</Command>
+      </Item>
+      <Item>
+        <Key>Down</Key>
+        <Command>IncreaseTick</Command>
+      </Item>
+      <Item>
+        <Key>LeftButton</Key>
+        <Command>ToggleCell</Command>
+      </Item>
+    </Inputs>
   </Asset>
 </XnaContent>

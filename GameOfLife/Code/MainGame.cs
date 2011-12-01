@@ -24,13 +24,17 @@ namespace GameOfLife
         public MainGame()
         {
             // game components
-            Components.Add(new DefaultSettings(this));
+            settings = new DefaultSettings(this);
+            Components.Add(settings);
 
             input = new InputManager(this);
             Components.Add(input);
 
-            Components.Add(new State(this));
-            Components.Add(new View(this));
+            state = new State(this);
+            Components.Add(state);
+
+            view = new View(this);
+            Components.Add(view);
 
             // rest
             IsMouseVisible = true;
@@ -45,9 +49,6 @@ namespace GameOfLife
                 MouseButtons.LeftButton,
                 (current, gameTime) =>
                 {
-                    IView view = (IView) Services.GetService(typeof(IView));
-                    IState state = (IState) Services.GetService(typeof(IState));
-
                     state.World.Toggle(view.XToRow(current.X), view.YToColumn(current.Y));
                 });
 
@@ -55,7 +56,6 @@ namespace GameOfLife
                 Keys.Space,
                 (current, gameTime) =>
                 {
-                    IState state = (IState) Services.GetService(typeof(IState));
                     state.ToggleRunning();
                 });
 
@@ -63,7 +63,6 @@ namespace GameOfLife
                 Keys.Up,
                 (current, gameTime) =>
                 {
-                    IState state = (IState) Services.GetService(typeof(IState));
                     state.DecreaseTick();
                 });
 
@@ -71,7 +70,6 @@ namespace GameOfLife
                 Keys.Down,
                 (current, gameTime) =>
                 {
-                    IState state = (IState) Services.GetService(typeof(IState));
                     state.IncreaseTick();
                 });
 
@@ -88,7 +86,10 @@ namespace GameOfLife
         #endregion
 
         #region Fields
+        private DefaultSettings settings;
         private InputManager input;
+        private State state;
+        private View view;
         #endregion
     }
     #endregion
