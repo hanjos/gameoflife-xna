@@ -49,7 +49,7 @@ namespace GameOfLife.Graphics
             gameState.RunningToggled += (sender, args) => backgroundColor = args.Current ? runningColor : staticColor;
 
             ISettings settings = (ISettings) Game.Services.GetService(typeof(ISettings));
-            backgroundColor = settings.StartRunning ? runningColor : staticColor;
+            backgroundColor = settings.RunAtStart ? runningColor : staticColor;
 
             base.Initialize();
         }

@@ -11,18 +11,21 @@ using Microsoft.Xna.Framework.Media;
 
 namespace Scripts
 {
-    public class Config
+    public struct Config
     {
         public int Rows;
         public int Columns;
         public int TickInMilliseconds;
-        public bool StartRunning;
-        public Input[] Inputs;
+        public bool RunAtStart;
+        public Commands Commands;
     }
 
-    public class Input
+    public struct Commands
     {
-        public string Key;
-        public string Command;
+        public string ToggleCell;
+        public string ToggleRunning;
+        public string SpeedUp;
+        public string SlowDown;
+        public string Quit;
     }
 }

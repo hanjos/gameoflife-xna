@@ -18,7 +18,7 @@ namespace GameOfLife.Settings
         int Rows { get; }
         int Columns { get; }
         TimeSpan Tick { get; }
-        bool StartRunning { get; }
+        bool RunAtStart { get; }
     }
 
     public class DefaultSettings : Microsoft.Xna.Framework.GameComponent, ISettings
@@ -45,7 +45,7 @@ namespace GameOfLife.Settings
             Rows = config.Rows;
             Columns = config.Columns;
             Tick = TimeSpan.FromMilliseconds(config.TickInMilliseconds);
-            StartRunning = config.StartRunning;
+            RunAtStart = config.RunAtStart;
         }
         #endregion
 
@@ -71,12 +71,12 @@ namespace GameOfLife.Settings
         }
         private TimeSpan _tick;
 
-        public bool StartRunning
+        public bool RunAtStart
         {
-            get { return _startRunning; }
-            private set { _startRunning = value; }
+            get { return _runAtStart; }
+            private set { _runAtStart = value; }
         }
-        private bool _startRunning;
+        private bool _runAtStart;
         #endregion
     }
     #endregion

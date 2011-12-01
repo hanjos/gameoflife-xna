@@ -47,7 +47,7 @@ namespace GameOfLife.GameState
 
             World = new World(settings.Rows, settings.Columns);
             Tick = settings.Tick;
-            Running = settings.StartRunning;
+            Running = settings.RunAtStart;
 
             base.Initialize();
         }
