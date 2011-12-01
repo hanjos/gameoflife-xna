@@ -11,11 +11,9 @@ namespace GameOfLife.Input
     public interface IInput
     {
         void Register(Keys key, Action<KeyboardState, GameTime> action);
-        void Swap(Keys from, Keys to);
         Action<KeyboardState, GameTime> Unregister(Keys key);
         
         void Register(MouseButtons mouseButton, Action<MouseState, GameTime> action);
-        void Swap(MouseButtons from, MouseButtons to);
         Action<MouseState, GameTime> Unregister(MouseButtons mouseButton);
     }
 
@@ -69,34 +67,6 @@ namespace GameOfLife.Input
             _mouseInput.Remove(mouseButton);
 
             return action;
-        }
-
-        public virtual void Swap(Keys from, Keys to)
-        {
-            if (from == null || from == to || !_keyboardInput.ContainsKey(from)) // do nothing
-                return;
-
-            if (to == null) // remove from's binding, if it exists
-            {
-                Unregister(from);
-                return;
-            }
-
-            Register(to, Unregister(from));
-        }
-
-        public virtual void Swap(MouseButtons from, MouseButtons to)
-        {
-            if (from == null || from == to || !_mouseInput.ContainsKey(from)) // do nothing
-                return;
-
-            if (to == null) // remove from's binding, if it exists
-            {
-                Unregister(from);
-                return;
-            }
-
-            Register(to, Unregister(from));
         }
         #endregion
 
