@@ -12,6 +12,7 @@ using Scripts;
 
 namespace GameOfLife.Settings
 {
+    #region Settings Component
     public interface ISettings
     {
         int Rows { get; }
@@ -39,7 +40,7 @@ namespace GameOfLife.Settings
         #endregion
 
         #region Operations
-        public void LoadFrom(Config config)
+        protected void LoadFrom(Config config)
         {
             Rows = config.Rows;
             Columns = config.Columns;
@@ -52,30 +53,31 @@ namespace GameOfLife.Settings
         public int Rows
         {
             get { return _rows; }
-            set { _rows = value; }
+            private set { _rows = value; }
         }
         private int _rows;
 
         public int Columns
         {
             get { return _columns; }
-            set { _columns = value; }
+            private set { _columns = value; }
         }
         private int _columns;
 
         public TimeSpan Tick
         {
             get { return _tick; }
-            set { _tick = value; }
+            private set { _tick = value; }
         }
         private TimeSpan _tick;
 
         public bool StartRunning
         {
             get { return _startRunning; }
-            set { _startRunning = value; }
+            private set { _startRunning = value; }
         }
         private bool _startRunning;
         #endregion
     }
+    #endregion
 }

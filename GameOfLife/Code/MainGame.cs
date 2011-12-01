@@ -17,14 +17,14 @@ namespace GameOfLife
     }
     #endregion
 
+    #region Main Game
     public class MainGame : Microsoft.Xna.Framework.Game
     {
         #region Initialization
         public MainGame()
         {
             // game components
-            settings = new DefaultSettings(this);
-            Components.Add(settings);
+            Components.Add(new DefaultSettings(this));
 
             input = new InputManager(this);
             Components.Add(input);
@@ -88,8 +88,8 @@ namespace GameOfLife
         #endregion
 
         #region Fields
-        private DefaultSettings settings;
         private InputManager input;
         #endregion
     }
+    #endregion
 }

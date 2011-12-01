@@ -21,6 +21,7 @@ namespace GameOfLife.Input
 
     public class InputManager : Microsoft.Xna.Framework.GameComponent, IInput
     {
+        #region Initialization
         public InputManager(Game game) : base(game)
         {
             _keyboardInput = new Dictionary<Keys, Action<KeyboardState, GameTime>>();
@@ -29,6 +30,7 @@ namespace GameOfLife.Input
             // registering itself as a service
             game.Services.AddService(typeof(IInput), this);
         }
+        #endregion
 
         #region Operations
         public override void Update(GameTime gameTime)
