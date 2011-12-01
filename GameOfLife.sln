@@ -5,7 +5,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Code", "GameOfLife\Code\Cod
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Content", "GameOfLife\Content\Content.contentproj", "{CDBE7002-0CBD-4580-ABF9-A64303E10A01}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Scripts", "Scripts\Scripts.csproj", "{68DBBECC-846A-4E46-8C43-EF2FA3F9965F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Scripts", "GameOfLife\Scripts\Scripts.csproj", "{68DBBECC-846A-4E46-8C43-EF2FA3F9965F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

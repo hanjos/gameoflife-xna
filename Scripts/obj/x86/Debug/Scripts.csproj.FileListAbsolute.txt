@@ -1,6 +1,0 @@
-C:\Beto\src\xnalife\Scripts\bin\x86\Debug\Scripts.dll
-C:\Beto\src\xnalife\Scripts\bin\x86\Debug\Scripts.pdb
-C:\Beto\src\xnalife\Scripts\obj\x86\Debug\ResolveAssemblyReference.cache
-C:\Beto\src\xnalife\Scripts\obj\x86\Debug\Microsoft.Xna.Framework.RuntimeProfile.txt
-C:\Beto\src\xnalife\Scripts\obj\x86\Debug\Scripts.dll
-C:\Beto\src\xnalife\Scripts\obj\x86\Debug\Scripts.pdb

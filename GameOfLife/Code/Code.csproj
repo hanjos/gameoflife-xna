@@ -125,7 +125,7 @@
     <Content Include="GameThumbnail.png" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Scripts\Scripts.csproj">
+    <ProjectReference Include="..\Scripts\Scripts.csproj">
       <Project>{68DBBECC-846A-4E46-8C43-EF2FA3F9965F}</Project>
       <Name>Scripts</Name>
     </ProjectReference>

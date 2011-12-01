@@ -10,6 +10,13 @@ using System;
 
 namespace GameOfLife
 {
+    #region Constants
+    public static class Constants
+    {
+        public const string CONFIG_FILE = "config";
+    }
+    #endregion
+
     public class MainGame : Microsoft.Xna.Framework.Game
     {
         #region Initialization
@@ -33,11 +40,6 @@ namespace GameOfLife
 
         protected override void Initialize()
         {
-            // extracting config.xml's data, and making it available via Settings
-            Config config = Content.Load<Config>("config");
-
-            settings.LoadFrom(config);
-
             // setting up the input
             input.Register(
                 MouseButtons.LeftButton,
