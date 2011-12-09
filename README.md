@@ -5,13 +5,28 @@ How to use
 
 Get Visual Studio (I used [Visual C# 2010 Express][vcsx10], it's free) and [XNA Game Studio 4.0][xna4], add the solution, and build it. A binary will be created somewhere inside the project. Dunno if there's a better way to do things in the .NET world.
 
+Versions
+--------
+
+The tag messages should tell you everything, but, at the risk of redundancy:
+
+* **0.5**: input can now be configured (programmatically).
+* **0.4**: the input component was getting coupled to the other components, so its events are gone, and the game state component is the foundation component.
+* **0.3**: divvied up MainGame's logic in XNA game components.
+* **0.2**: tried using events and some extra abstractions here and there for input processing, since XNA provides little.
+* **0.1**: the first working version.
+
+Working on
+----------
+
+**0.6**: using a configuration file instead of hardcoded values. Lots of magic numbers and values which could be put in an external script.
+
 To do
 -----
 
 In no particular order:
 
 * **Testing**. Kinda silly for a small project like this, but it's a good excuse to learn how .NET folks do stuff.
-* **Property files**: Lots of magic numbers and values which could be put in an external script; gotta learn how first...
 * **Console**: A console seems like a nice idea :)
 * **WinForms integration**: Apparently XNA's standard usage doesn't match up well with WinForms; must investigate further.
 * **Dependency injection**: Worth a [look][ninject-xna], if only to rule it out. Seems like [Ninject][ninject] is the name of the game.
