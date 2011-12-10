@@ -10,6 +10,7 @@ Versions
 
 The tag messages should tell you everything, but, at the risk of redundancy:
 
+* **0.6**: using a configuration file instead of hardcoded values.
 * **0.5**: input can now be configured (programmatically).
 * **0.4**: the input component was getting coupled to the other components, so its events are gone, and the game state component is the foundation component.
 * **0.3**: divvied up MainGame's logic in XNA game components.
@@ -19,7 +20,7 @@ The tag messages should tell you everything, but, at the risk of redundancy:
 Working on
 ----------
 
-**0.6**: using a configuration file instead of hardcoded values. Lots of magic numbers and values which could be put in an external script.
+To be decided...
 
 To do
 -----
