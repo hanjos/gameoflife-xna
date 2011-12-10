@@ -14,6 +14,33 @@ namespace GameOfLife.Utilities
         public ComparisonException(string message, Exception inner) : base(message, inner) {}
     }
 
+    public class TypeMismatchException : ApplicationException
+    {
+        private static string BuildMessage(Type actual, params Type[] expected)
+        {
+            return "Expected one of " + expected + ", got " + actual;
+        }
+
+        public TypeMismatchException(Type actual, params Type[] expected) : base(BuildMessage(actual, expected)) {
+            Expected = expected;
+            Actual = actual;
+        }
+
+        public Type[] Expected 
+        {
+            get { return expected; }
+            private set { expected = value; }
+        }
+        private Type[] expected;
+
+        public Type Actual
+        {
+            get { return actual; }
+            private set { actual = value; }
+        }
+        private Type actual;
+    }
+
     public class TimeSpanUtils
     {
         public static TimeSpan Max(TimeSpan a, TimeSpan b)
@@ -51,5 +78,29 @@ namespace GameOfLife.Utilities
             else
                 throw new ComparisonException("Unknown comparison result: " + comparison);
         }
+    }
+
+    public class Either<L, R>
+    {
+        #region Initialization
+        public Either(object value)
+        {
+            if (value != null && !(value is L || value is R))
+                throw new TypeMismatchException(value.GetType(), typeof(L), typeof(R));
+
+            _value = value;
+        }
+        #endregion
+
+        #region Operations
+        public T Get<T>()
+        {
+            return (T) _value;
+        }
+        #endregion
+
+        #region Properties & Fields
+        private object _value;
+        #endregion
     }
 }
