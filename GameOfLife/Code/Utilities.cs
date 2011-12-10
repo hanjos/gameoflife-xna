@@ -93,7 +93,7 @@ namespace GameOfLife.Utilities
         #endregion
 
         #region Operations
-        public T Get<T>()
+        public T As<T>()
         {
             return (T) _value;
         }

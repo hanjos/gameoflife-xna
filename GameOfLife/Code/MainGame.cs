@@ -44,44 +44,44 @@ namespace GameOfLife
 
         protected override void Initialize()
         {
-            // setting up the input
+            // first initialize everybody
+            base.Initialize();
+
+            // now set the input
             input.Register(
-                MouseButtons.LeftButton,
+                settings.ToggleCell.As<MouseButtons>(),
                 (current, gameTime) =>
                 {
                     state.World.Toggle(view.XToRow(current.X), view.YToColumn(current.Y));
                 });
 
             input.Register(
-                Keys.Space,
+                settings.ToggleRunning.As<Keys>(),
                 (current, gameTime) =>
                 {
                     state.ToggleRunning();
                 });
 
             input.Register(
-                Keys.Up,
+                settings.SpeedUp.As<Keys>(),
                 (current, gameTime) =>
                 {
                     state.DecreaseTick();
                 });
 
             input.Register(
-                Keys.Down,
+                settings.SlowDown.As<Keys>(),
                 (current, gameTime) =>
                 {
                     state.IncreaseTick();
                 });
 
             input.Register(
-                Keys.Escape,
+                settings.Quit.As<Keys>(),
                 (current, gameTime) =>
                 {
                     Exit();
                 });
-
-            // now we can initialize everybody
-            base.Initialize();
         }
         #endregion
 
