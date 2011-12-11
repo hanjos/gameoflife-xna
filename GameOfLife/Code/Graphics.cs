@@ -28,7 +28,6 @@ namespace GameOfLife.Graphics
         Texture2D dummyTexture;
         Rectangle dummyRectangle;
         
-
         public View(Game game) : base(game)
         {
             graphics = new GraphicsDeviceManager(game);
@@ -50,12 +49,15 @@ namespace GameOfLife.Graphics
             LiveColor = settings.LiveColor;
             DrawGrid = settings.DrawGridAtStart;
 
+            // prep for rectangle drawing
             dummyRectangle = new Rectangle(0, 0, CellWidth, CellHeight);
             
-            graphics.PreferredBackBufferWidth = state.World.ColumnCount * CellWidth;  // set this value to the desired width of your window
-            graphics.PreferredBackBufferHeight = state.World.RowCount * CellHeight;   // set this value to the desired height of your window
+            // window size
+            graphics.PreferredBackBufferWidth = state.World.ColumnCount * CellWidth;
+            graphics.PreferredBackBufferHeight = state.World.RowCount * CellHeight;
             graphics.ApplyChanges();
 
+            // registering a callback in the model
             state.RunningToggled += (sender, args) => BackgroundColor = args.Current ? RunningColor : DeadColor;
 
             base.Initialize();
@@ -219,7 +221,7 @@ namespace GameOfLife.Graphics
             set { _backgroundColor = value; }
         }
         private Color _backgroundColor;
-        private bool _firstInvocationOfBackgroundColor = true;
+        private bool _firstInvocationOfBackgroundColor = true; // HACK
         #endregion
 
         #region Events That Should've Have Been Inherited
