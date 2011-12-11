@@ -1,7 +1,6 @@
 using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using GameOfLife.Input;
 using GameOfLife.GameState;
 using GameOfLife.Settings;
 
@@ -14,7 +13,7 @@ namespace GameOfLife.Graphics
         int RowToX(int row);
         int ColumnToY(int column);
 
-        bool DrawGridLines { get; set; }
+        bool DrawGrid { get; set; }
     }
     
     public class View : Microsoft.Xna.Framework.DrawableGameComponent, IView
@@ -52,7 +51,7 @@ namespace GameOfLife.Graphics
 
             ISettings settings = (ISettings) Game.Services.GetService(typeof(ISettings));
             backgroundColor = settings.RunAtStart ? runningColor : staticColor;
-            DrawGridLines = settings.DrawGridLines;
+            DrawGrid = settings.DrawGridAtStart;
 
             base.Initialize();
         }
@@ -86,16 +85,17 @@ namespace GameOfLife.Graphics
                     }
                 }
 
-                if (DrawGridLines)
+                if (DrawGrid)
                 {
+                    ISettings settings = (ISettings) Game.Services.GetService(typeof(ISettings));
                     for (int i = 0; i < gameState.World.RowCount; i++)
                     {
-                        DrawLine(spriteBatch, dummyTexture, 1, Color.Gray, new Vector2(0, RowToX(i)), new Vector2(graphics.PreferredBackBufferWidth, RowToX(i)));
+                        DrawLine(spriteBatch, dummyTexture, 1, settings.GridColor, new Vector2(0, RowToX(i)), new Vector2(Width, RowToX(i)));
                     }
 
                     for (int j = 0; j < gameState.World.ColumnCount; j++)
                     {
-                        DrawLine(spriteBatch, dummyTexture, 1, Color.Gray, new Vector2(ColumnToY(j), 0), new Vector2(ColumnToY(j), graphics.PreferredBackBufferHeight));
+                        DrawLine(spriteBatch, dummyTexture, 1, settings.GridColor, new Vector2(ColumnToY(j), 0), new Vector2(ColumnToY(j), Height));
                     }
                 }
             
@@ -141,12 +141,12 @@ namespace GameOfLife.Graphics
             return (int)(y * gameState.World.ColumnCount / Height);
         }
 
-        public bool DrawGridLines
+        public bool DrawGrid
         {
-            get { return _drawGridLines; }
-            set { _drawGridLines = value; }
+            get { return _drawGrid; }
+            set { _drawGrid = value; }
         }
-        private bool _drawGridLines;
+        private bool _drawGrid;
         #endregion
 
         #region Events That Should've Have Been Inherited

@@ -5,13 +5,17 @@
     <Columns>40</Columns>
     <TickInMilliseconds>100</TickInMilliseconds>
     <RunAtStart>false</RunAtStart>
-    <DrawGridLines>false</DrawGridLines>
+    <Grid>
+      <DrawAtStart>true</DrawAtStart>
+      <Color>LightGray</Color>
+    </Grid>
     <Commands>
       <ToggleCell>LeftButton</ToggleCell>
       <ToggleRunning>Space</ToggleRunning>
-      <ToggleGridLines>G</ToggleGridLines>
+      <ToggleGrid>G</ToggleGrid>
       <SpeedUp>Up</SpeedUp>
       <SlowDown>Down</SlowDown>
+      <Clear>C</Clear>
       <Quit>Escape</Quit>
     </Commands>
   </Asset>

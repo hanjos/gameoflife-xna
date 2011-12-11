@@ -1,12 +1,8 @@
-﻿using Microsoft.Xna.Framework;
-using GameOfLife.Graphics;
+﻿using GameOfLife.Graphics;
 using GameOfLife.Input;
-using GameOfLife.Model;
 using GameOfLife.GameState;
 using GameOfLife.Settings;
 using Microsoft.Xna.Framework.Input;
-using Scripts;
-using System;
 
 namespace GameOfLife
 {
@@ -63,10 +59,10 @@ namespace GameOfLife
                 });
 
             input.Register(
-                settings.ToggleGridLines.As<Keys>(),
+                settings.ToggleGrid.As<Keys>(),
                 (current, gameTime) =>
                 {
-                    view.DrawGridLines = !view.DrawGridLines;
+                    view.DrawGrid = !view.DrawGrid;
                 });
 
             input.Register(
@@ -81,6 +77,13 @@ namespace GameOfLife
                 (current, gameTime) =>
                 {
                     state.IncreaseTick();
+                });
+
+            input.Register(
+                settings.Clear.As<Keys>(),
+                (current, gameTime) =>
+                {
+                    state.Clear();
                 });
 
             input.Register(

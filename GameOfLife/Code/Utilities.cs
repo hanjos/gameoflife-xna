@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace GameOfLife.Utilities
 {
@@ -85,21 +82,29 @@ namespace GameOfLife.Utilities
         #region Initialization
         public Either(object value)
         {
-            if (value != null && !(value is L || value is R))
-                throw new TypeMismatchException(value.GetType(), typeof(L), typeof(R));
-
-            _value = value;
+            Value = value;
         }
         #endregion
 
         #region Operations
         public T As<T>()
         {
-            return (T) _value;
+            return (T) Value;
         }
         #endregion
 
         #region Properties & Fields
+        public object Value
+        {
+            get { return _value; }
+            set
+            {
+                if (value != null && !(value is L || value is R))
+                    throw new TypeMismatchException(value.GetType(), typeof(L), typeof(R));
+
+                _value = value;
+            }
+        }
         private object _value;
         #endregion
     }

@@ -1,13 +1,6 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Audio;
-using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.GamerServices;
-using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework.Media;
 using Scripts;
 using GameOfLife.Utilities;
 using GameOfLife.Input;
@@ -46,20 +39,21 @@ namespace GameOfLife.Settings
     #endregion
 
     #region Settings Component
-    
     public interface ISettings
     {
         int Rows { get; }
         int Columns { get; }
         TimeSpan Tick { get; }
         bool RunAtStart { get; }
-        bool DrawGridLines { get; }
+        bool DrawGridAtStart { get; }
+        Color GridColor { get; }
 
         Either<Keys, MouseButtons> ToggleCell { get; }
         Either<Keys, MouseButtons> ToggleRunning { get; }
-        Either<Keys, MouseButtons> ToggleGridLines { get; }
+        Either<Keys, MouseButtons> ToggleGrid { get; }
         Either<Keys, MouseButtons> SpeedUp { get; }
         Either<Keys, MouseButtons> SlowDown { get; }
+        Either<Keys, MouseButtons> Clear { get; }
         Either<Keys, MouseButtons> Quit { get; }
     }
 
@@ -88,17 +82,19 @@ namespace GameOfLife.Settings
             Columns = config.Columns;
             Tick = TimeSpan.FromMilliseconds(config.TickInMilliseconds);
             RunAtStart = config.RunAtStart;
-            DrawGridLines = config.DrawGridLines;
+            DrawGridAtStart = config.Grid.DrawAtStart;
+            GridColor = ExtractColorFrom(config.Grid.Color);
 
-            ToggleCell = ExtractCommand(config.Commands.ToggleCell);
-            ToggleRunning = ExtractCommand(config.Commands.ToggleRunning);
-            ToggleGridLines = ExtractCommand(config.Commands.ToggleGridLines);
-            SpeedUp = ExtractCommand(config.Commands.SpeedUp);
-            SlowDown = ExtractCommand(config.Commands.SlowDown);
-            Quit = ExtractCommand(config.Commands.Quit);
+            ToggleCell = ExtractCommandFrom(config.Commands.ToggleCell);
+            ToggleRunning = ExtractCommandFrom(config.Commands.ToggleRunning);
+            ToggleGrid = ExtractCommandFrom(config.Commands.ToggleGrid);
+            SpeedUp = ExtractCommandFrom(config.Commands.SpeedUp);
+            SlowDown = ExtractCommandFrom(config.Commands.SlowDown);
+            Clear = ExtractCommandFrom(config.Commands.Clear);
+            Quit = ExtractCommandFrom(config.Commands.Quit);
         }
 
-        protected Either<Keys, MouseButtons> ExtractCommand(string input)
+        protected Either<Keys, MouseButtons> ExtractCommandFrom(string input)
         {
             // try to convert to a key
             Keys key;
@@ -131,6 +127,12 @@ namespace GameOfLife.Settings
                     return null;
             }
         }
+
+        protected Color ExtractColorFrom(string input)
+        {
+            System.Drawing.Color color = System.Drawing.Color.FromName(input);
+            return new Color(color.R, color.G, color.B, color.A);
+        }
         #endregion
 
         #region ISettings
@@ -162,12 +164,19 @@ namespace GameOfLife.Settings
         }
         private bool _runAtStart;
 
-        public bool DrawGridLines
+        public bool DrawGridAtStart
         {
-            get { return _drawGridLines; }
-            private set { _drawGridLines = value; }
+            get { return _drawGrid; }
+            private set { _drawGrid = value; }
         }
-        private bool _drawGridLines;
+        private bool _drawGrid;
+
+        public Color GridColor
+        {
+            get { return _gridColor; }
+            private set { _gridColor = value; }
+        }
+        private Color _gridColor;
 
         public Either<Keys, MouseButtons> ToggleCell
         {
@@ -183,7 +192,7 @@ namespace GameOfLife.Settings
         }
         private Either<Keys, MouseButtons> _toggleRunning;
 
-        public Either<Keys, MouseButtons> ToggleGridLines
+        public Either<Keys, MouseButtons> ToggleGrid
         {
             get { return _toggleGridLines; }
             private set { _toggleGridLines = value; }
@@ -203,6 +212,13 @@ namespace GameOfLife.Settings
             private set { _slowDown = value; }
         }
         private Either<Keys, MouseButtons> _slowDown;
+
+        public Either<Keys, MouseButtons> Clear
+        {
+            get { return _clear; }
+            private set { _clear = value; }
+        }
+        private Either<Keys, MouseButtons> _clear;
 
         public Either<Keys, MouseButtons> Quit
         {

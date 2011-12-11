@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace GameOfLife.Model
 {
@@ -15,13 +13,7 @@ namespace GameOfLife.Model
             cells = new CellState[rows, columns];
 
             // populate
-            for (int i = 0; i < rows; i++)
-            {
-                for (int j = 0; j < columns; j++)
-                {
-                    cells[i, j] = CellState.Dead;
-                }
-            }
+            Clear();
         }
         #endregion
 
@@ -78,6 +70,13 @@ namespace GameOfLife.Model
         public bool IsAlive(int i, int j)
         {
             return Cells[i, j] == CellState.Alive;
+        }
+
+        public void Clear()
+        { 
+            for (int i = 0; i < RowCount; i++)
+                for (int j = 0; j < ColumnCount; j++)
+                    Cells[i, j] = CellState.Dead;
         }
         #endregion
 

@@ -1,14 +1,5 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Audio;
-using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.GamerServices;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework.Media;
-using GameOfLife.Input;
 using GameOfLife.Model;
 using GameOfLife.Utilities;
 using GameOfLife.Settings;
@@ -86,6 +77,11 @@ namespace GameOfLife.GameState
             Tick = TimeSpanUtils.Max(Tick - TimeSpan.FromMilliseconds(100), TimeSpan.FromMilliseconds(0));
 
             return old != Tick;
+        }
+
+        public virtual void Clear()
+        {
+            World.Clear();
         }
         #endregion
 
