@@ -96,12 +96,14 @@ namespace GameOfLife.Graphics
                     ISettings settings = (ISettings) Game.Services.GetService(typeof(ISettings));
                     for (int i = 0; i < gameState.World.RowCount; i++)
                     {
-                        DrawLine(spriteBatch, dummyTexture, 1, settings.GridColor, new Vector2(0, RowToX(i)), new Vector2(Width, RowToX(i)));
+                        DrawLine(spriteBatch, dummyTexture, 1, settings.GridColor,
+                            new Vector2(0, i * CellHeight), new Vector2(Width, i * CellHeight));
                     }
 
                     for (int j = 0; j < gameState.World.ColumnCount; j++)
                     {
-                        DrawLine(spriteBatch, dummyTexture, 1, settings.GridColor, new Vector2(ColumnToY(j), 0), new Vector2(ColumnToY(j), Height));
+                        DrawLine(spriteBatch, dummyTexture, 1, settings.GridColor,
+                            new Vector2(j * CellWidth, 0), new Vector2(j * CellWidth, Height));
                     }
                 }
             
