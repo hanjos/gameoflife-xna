@@ -45,8 +45,13 @@ namespace GameOfLife.Settings
         int Columns { get; }
         int CellWidth { get; }
         int CellHeight { get; }
+        Color DeadColor { get; }
+        Color RunningColor { get; }
+        Color LiveColor { get; }
+
         TimeSpan Tick { get; }
         bool RunAtStart { get; }
+
         bool DrawGridAtStart { get; }
         Color GridColor { get; }
 
@@ -85,6 +90,9 @@ namespace GameOfLife.Settings
             Columns = config.World.Columns;
             CellWidth = config.World.CellWidth;
             CellHeight = config.World.CellHeight;
+            DeadColor = ExtractColorFrom(config.World.DeadColor);
+            RunningColor = ExtractColorFrom(config.World.RunningColor);
+            LiveColor = ExtractColorFrom(config.World.LiveColor);
 
             // time troubles
             Tick = TimeSpan.FromMilliseconds(config.TickInMilliseconds);
@@ -173,6 +181,27 @@ namespace GameOfLife.Settings
             private set { _cellHeight = value; }
         }
         private int _cellHeight;
+
+        public Color DeadColor
+        {
+            get { return _deadColor; }
+            private set { _deadColor = value; }
+        }
+        private Color _deadColor;
+
+        public Color RunningColor
+        {
+            get { return _runningColor; }
+            private set { _runningColor = value; }
+        }
+        private Color _runningColor;
+
+        public Color LiveColor
+        {
+            get { return _liveColor; }
+            private set { _liveColor = value; }
+        }
+        private Color _liveColor;
 
         public TimeSpan Tick
         {

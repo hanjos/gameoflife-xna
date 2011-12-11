@@ -6,8 +6,11 @@
     <World>
       <Rows>40</Rows>
       <Columns>40</Columns>
-      <CellWidth>16</CellWidth>
-      <CellHeight>16</CellHeight>
+      <CellWidth>10</CellWidth>
+      <CellHeight>10</CellHeight>
+      <DeadColor>White</DeadColor>
+      <RunningColor>Wheat</RunningColor>
+      <LiveColor>Black</LiveColor>
     </World>
     <Grid>
       <DrawAtStart>true</DrawAtStart>

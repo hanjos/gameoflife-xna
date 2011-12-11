@@ -16,6 +16,9 @@ namespace GameOfLife.Graphics
         bool DrawGrid { get; set; }
         int CellWidth { get; }
         int CellHeight { get; }
+        Color DeadColor { get; }
+        Color RunningColor { get; }
+        Color LiveColor { get; }
     }
     
     public class View : Microsoft.Xna.Framework.DrawableGameComponent, IView
@@ -24,40 +27,36 @@ namespace GameOfLife.Graphics
         SpriteBatch spriteBatch;
         Texture2D dummyTexture;
         Rectangle dummyRectangle;
-        Color backgroundColor;
-
-        readonly Color staticColor = Color.White;
-        readonly Color runningColor = Color.Wheat;
-        readonly int cellWidth = 16;
-        readonly int cellHeight = 16;
+        
 
         public View(Game game) : base(game)
         {
             graphics = new GraphicsDeviceManager(game);
-            backgroundColor = staticColor;
-
+            
             // registering itself as a service
             game.Services.AddService(typeof(IView), this);
         }
 
         public override void Initialize()
         {
-            IState gameState = (IState) Game.Services.GetService(typeof(IState));
+            IState state = (IState) Game.Services.GetService(typeof(IState));
             ISettings settings = (ISettings) Game.Services.GetService(typeof(ISettings));
 
+            // load settings
             CellWidth = settings.CellWidth;
             CellHeight = settings.CellHeight;
+            DeadColor = settings.DeadColor;
+            RunningColor = settings.RunningColor;
+            LiveColor = settings.LiveColor;
+            DrawGrid = settings.DrawGridAtStart;
 
             dummyRectangle = new Rectangle(0, 0, CellWidth, CellHeight);
             
-            graphics.PreferredBackBufferWidth = gameState.World.ColumnCount * CellWidth;  // set this value to the desired width of your window
-            graphics.PreferredBackBufferHeight = gameState.World.RowCount * CellHeight;   // set this value to the desired height of your window
+            graphics.PreferredBackBufferWidth = state.World.ColumnCount * CellWidth;  // set this value to the desired width of your window
+            graphics.PreferredBackBufferHeight = state.World.RowCount * CellHeight;   // set this value to the desired height of your window
             graphics.ApplyChanges();
 
-            gameState.RunningToggled += (sender, args) => backgroundColor = args.Current ? runningColor : staticColor;
-
-            backgroundColor = settings.RunAtStart ? runningColor : staticColor;
-            DrawGrid = settings.DrawGridAtStart;
+            state.RunningToggled += (sender, args) => BackgroundColor = args.Current ? RunningColor : DeadColor;
 
             base.Initialize();
         }
@@ -76,31 +75,31 @@ namespace GameOfLife.Graphics
 
         public override void Draw(GameTime gameTime)
         {
-            IState gameState = (IState) Game.Services.GetService(typeof(IState));
+            IState state = (IState) Game.Services.GetService(typeof(IState));
 
-            GraphicsDevice.Clear(backgroundColor);
+            GraphicsDevice.Clear(BackgroundColor);
 
             spriteBatch.Begin();
 
-                for (int i = 0; i < gameState.World.RowCount; i++)
+                for (int i = 0; i < state.World.RowCount; i++)
                 {
-                    for (int j = 0; j < gameState.World.ColumnCount; j++)
+                    for (int j = 0; j < state.World.ColumnCount; j++)
                     {
-                        if (gameState.World.IsAlive(i, j))
-                            spriteBatch.Draw(dummyTexture, new Vector2(RowToX(i), ColumnToY(j)), dummyRectangle, Color.Black);
+                        if (state.World.IsAlive(i, j))
+                            spriteBatch.Draw(dummyTexture, new Vector2(RowToX(i), ColumnToY(j)), dummyRectangle, LiveColor);
                     }
                 }
 
                 if (DrawGrid)
                 {
                     ISettings settings = (ISettings) Game.Services.GetService(typeof(ISettings));
-                    for (int i = 0; i < gameState.World.RowCount; i++)
+                    for (int i = 0; i < state.World.RowCount; i++)
                     {
                         DrawLine(spriteBatch, dummyTexture, 1, settings.GridColor,
                             new Vector2(0, i * CellHeight), new Vector2(Width, i * CellHeight));
                     }
 
-                    for (int j = 0; j < gameState.World.ColumnCount; j++)
+                    for (int j = 0; j < state.World.ColumnCount; j++)
                     {
                         DrawLine(spriteBatch, dummyTexture, 1, settings.GridColor,
                             new Vector2(j * CellWidth, 0), new Vector2(j * CellWidth, Height));
@@ -169,13 +168,27 @@ namespace GameOfLife.Graphics
             private set { _cellHeight = value; }
         }
         private int _cellHeight;
-        #endregion
 
-        #region Events That Should've Have Been Inherited
-        public event EventHandler<EventArgs> DeviceCreated;
-        public event EventHandler<EventArgs> DeviceDisposing;
-        public event EventHandler<EventArgs> DeviceReset;
-        public event EventHandler<EventArgs> DeviceResetting;
+        public Color DeadColor
+        {
+            get { return _deadColor; }
+            private set { _deadColor = value; }
+        }
+        private Color _deadColor;
+
+        public Color RunningColor
+        {
+            get { return _runningColor; }
+            private set { _runningColor = value; }
+        }
+        private Color _runningColor;
+
+        public Color LiveColor
+        {
+            get { return _liveColor; }
+            private set { _liveColor = value; }
+        }
+        private Color _liveColor;
         #endregion
 
         #region Properties & Fields
@@ -188,6 +201,32 @@ namespace GameOfLife.Graphics
         {
             get { return graphics.PreferredBackBufferHeight; }
         }
+
+        public Color BackgroundColor
+        {
+            get 
+            {
+                if (_firstInvocationOfBackgroundColor)
+                {
+                    _firstInvocationOfBackgroundColor = false;
+
+                    ISettings settings = (ISettings) Game.Services.GetService(typeof(ISettings));
+                    BackgroundColor = settings.RunAtStart ? settings.RunningColor : settings.DeadColor;
+                }
+
+                return _backgroundColor;
+            }
+            set { _backgroundColor = value; }
+        }
+        private Color _backgroundColor;
+        private bool _firstInvocationOfBackgroundColor = true;
+        #endregion
+
+        #region Events That Should've Have Been Inherited
+        public event EventHandler<EventArgs> DeviceCreated;
+        public event EventHandler<EventArgs> DeviceDisposing;
+        public event EventHandler<EventArgs> DeviceReset;
+        public event EventHandler<EventArgs> DeviceResetting;
         #endregion
     }
 }

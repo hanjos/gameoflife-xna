@@ -15,6 +15,9 @@ namespace Scripts
         public int Columns;
         public int CellWidth;
         public int CellHeight;
+        public string DeadColor;
+        public string RunningColor;
+        public string LiveColor;
     }
 
     public struct Grid
