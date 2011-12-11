@@ -49,9 +49,6 @@ namespace GameOfLife.Input
 
         public virtual Action<KeyboardState, GameTime> Unregister(Keys key)
         {
-            if (key == null) // do nothing
-                return null; 
-
             Action<KeyboardState, GameTime> action = _keyboardInput[key];
             _keyboardInput.Remove(key);
 
