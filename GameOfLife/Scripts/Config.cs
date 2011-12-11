@@ -17,6 +17,7 @@ namespace Scripts
         public int Columns;
         public int TickInMilliseconds;
         public bool RunAtStart;
+        public bool DrawGridLines;
         public Commands Commands;
     }
 
@@ -24,6 +25,7 @@ namespace Scripts
     {
         public string ToggleCell;
         public string ToggleRunning;
+        public string ToggleGridLines;
         public string SpeedUp;
         public string SlowDown;
         public string Quit;

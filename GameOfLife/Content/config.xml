@@ -5,9 +5,11 @@
     <Columns>40</Columns>
     <TickInMilliseconds>100</TickInMilliseconds>
     <RunAtStart>false</RunAtStart>
+    <DrawGridLines>false</DrawGridLines>
     <Commands>
       <ToggleCell>LeftButton</ToggleCell>
       <ToggleRunning>Space</ToggleRunning>
+      <ToggleGridLines>G</ToggleGridLines>
       <SpeedUp>Up</SpeedUp>
       <SlowDown>Down</SlowDown>
       <Quit>Escape</Quit>

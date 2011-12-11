@@ -13,6 +13,8 @@ namespace GameOfLife.Graphics
         int YToColumn(int y);
         int RowToX(int row);
         int ColumnToY(int column);
+
+        bool DrawGridLines { get; set; }
     }
     
     public class View : Microsoft.Xna.Framework.DrawableGameComponent, IView
@@ -50,6 +52,7 @@ namespace GameOfLife.Graphics
 
             ISettings settings = (ISettings) Game.Services.GetService(typeof(ISettings));
             backgroundColor = settings.RunAtStart ? runningColor : staticColor;
+            DrawGridLines = settings.DrawGridLines;
 
             base.Initialize();
         }
@@ -83,14 +86,17 @@ namespace GameOfLife.Graphics
                     }
                 }
 
-                for (int i = 0; i < gameState.World.RowCount; i++)
+                if (DrawGridLines)
                 {
-                    DrawLine(spriteBatch, dummyTexture, 1, Color.Gray, new Vector2(0, RowToX(i)), new Vector2(graphics.PreferredBackBufferWidth, RowToX(i)));
-                }
-                
-                for (int j = 0; j < gameState.World.ColumnCount; j++)
-                {
-                    DrawLine(spriteBatch, dummyTexture, 1, Color.Gray, new Vector2(ColumnToY(j), 0), new Vector2(ColumnToY(j), graphics.PreferredBackBufferHeight));
+                    for (int i = 0; i < gameState.World.RowCount; i++)
+                    {
+                        DrawLine(spriteBatch, dummyTexture, 1, Color.Gray, new Vector2(0, RowToX(i)), new Vector2(graphics.PreferredBackBufferWidth, RowToX(i)));
+                    }
+
+                    for (int j = 0; j < gameState.World.ColumnCount; j++)
+                    {
+                        DrawLine(spriteBatch, dummyTexture, 1, Color.Gray, new Vector2(ColumnToY(j), 0), new Vector2(ColumnToY(j), graphics.PreferredBackBufferHeight));
+                    }
                 }
             
             spriteBatch.End();
@@ -99,8 +105,7 @@ namespace GameOfLife.Graphics
         }
 
         #region Helper Methods
-        private void DrawLine(SpriteBatch batch, Texture2D blank,
-              float width, Color color, Vector2 point1, Vector2 point2)
+        private void DrawLine(SpriteBatch batch, Texture2D blank, float width, Color color, Vector2 point1, Vector2 point2)
         {
             float angle = (float) Math.Atan2(point2.Y - point1.Y, point2.X - point1.X);
             float length = Vector2.Distance(point1, point2);
@@ -135,6 +140,13 @@ namespace GameOfLife.Graphics
             IState gameState = (IState) Game.Services.GetService(typeof(IState));
             return (int)(y * gameState.World.ColumnCount / Height);
         }
+
+        public bool DrawGridLines
+        {
+            get { return _drawGridLines; }
+            set { _drawGridLines = value; }
+        }
+        private bool _drawGridLines;
         #endregion
 
         #region Events That Should've Have Been Inherited

@@ -53,9 +53,11 @@ namespace GameOfLife.Settings
         int Columns { get; }
         TimeSpan Tick { get; }
         bool RunAtStart { get; }
+        bool DrawGridLines { get; }
 
         Either<Keys, MouseButtons> ToggleCell { get; }
         Either<Keys, MouseButtons> ToggleRunning { get; }
+        Either<Keys, MouseButtons> ToggleGridLines { get; }
         Either<Keys, MouseButtons> SpeedUp { get; }
         Either<Keys, MouseButtons> SlowDown { get; }
         Either<Keys, MouseButtons> Quit { get; }
@@ -86,9 +88,11 @@ namespace GameOfLife.Settings
             Columns = config.Columns;
             Tick = TimeSpan.FromMilliseconds(config.TickInMilliseconds);
             RunAtStart = config.RunAtStart;
+            DrawGridLines = config.DrawGridLines;
 
             ToggleCell = ExtractCommand(config.Commands.ToggleCell);
             ToggleRunning = ExtractCommand(config.Commands.ToggleRunning);
+            ToggleGridLines = ExtractCommand(config.Commands.ToggleGridLines);
             SpeedUp = ExtractCommand(config.Commands.SpeedUp);
             SlowDown = ExtractCommand(config.Commands.SlowDown);
             Quit = ExtractCommand(config.Commands.Quit);
@@ -158,6 +162,13 @@ namespace GameOfLife.Settings
         }
         private bool _runAtStart;
 
+        public bool DrawGridLines
+        {
+            get { return _drawGridLines; }
+            private set { _drawGridLines = value; }
+        }
+        private bool _drawGridLines;
+
         public Either<Keys, MouseButtons> ToggleCell
         {
             get { return _toggleCell; }
@@ -171,6 +182,13 @@ namespace GameOfLife.Settings
             private set { _toggleRunning = value; }
         }
         private Either<Keys, MouseButtons> _toggleRunning;
+
+        public Either<Keys, MouseButtons> ToggleGridLines
+        {
+            get { return _toggleGridLines; }
+            private set { _toggleGridLines = value; }
+        }
+        private Either<Keys, MouseButtons> _toggleGridLines;
 
         public Either<Keys, MouseButtons> SpeedUp
         {

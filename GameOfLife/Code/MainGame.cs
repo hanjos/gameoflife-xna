@@ -63,6 +63,13 @@ namespace GameOfLife
                 });
 
             input.Register(
+                settings.ToggleGridLines.As<Keys>(),
+                (current, gameTime) =>
+                {
+                    view.DrawGridLines = !view.DrawGridLines;
+                });
+
+            input.Register(
                 settings.SpeedUp.As<Keys>(),
                 (current, gameTime) =>
                 {
