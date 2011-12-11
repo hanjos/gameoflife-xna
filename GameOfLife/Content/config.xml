@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <XnaContent>
   <Asset Type="Scripts.Config">
-    <Rows>25</Rows>
-    <Columns>25</Columns>
+    <Rows>40</Rows>
+    <Columns>40</Columns>
     <TickInMilliseconds>100</TickInMilliseconds>
     <RunAtStart>false</RunAtStart>
     <Commands>
