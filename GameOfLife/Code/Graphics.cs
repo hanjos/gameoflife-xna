@@ -82,11 +82,34 @@ namespace GameOfLife.Graphics
                             spriteBatch.Draw(dummyTexture, new Vector2(RowToX(i), ColumnToY(j)), dummyRectangle, Color.Black);
                     }
                 }
+
+                for (int i = 0; i < gameState.World.RowCount; i++)
+                {
+                    DrawLine(spriteBatch, dummyTexture, 1, Color.Gray, new Vector2(0, RowToX(i)), new Vector2(graphics.PreferredBackBufferWidth, RowToX(i)));
+                }
+                
+                for (int j = 0; j < gameState.World.ColumnCount; j++)
+                {
+                    DrawLine(spriteBatch, dummyTexture, 1, Color.Gray, new Vector2(ColumnToY(j), 0), new Vector2(ColumnToY(j), graphics.PreferredBackBufferHeight));
+                }
             
             spriteBatch.End();
 
             base.Draw(gameTime);
         }
+
+        #region Helper Methods
+        private void DrawLine(SpriteBatch batch, Texture2D blank,
+              float width, Color color, Vector2 point1, Vector2 point2)
+        {
+            float angle = (float) Math.Atan2(point2.Y - point1.Y, point2.X - point1.X);
+            float length = Vector2.Distance(point1, point2);
+
+            batch.Draw(blank, point1, null, color,
+                       angle, Vector2.Zero, new Vector2(length, width),
+                       SpriteEffects.None, 0);
+        }
+        #endregion
 
         #region IView Methods
         public virtual int ColumnToY(int column)
