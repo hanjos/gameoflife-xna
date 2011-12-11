@@ -10,6 +10,7 @@ Versions
 
 The tag messages should tell you everything, but, at the risk of redundancy:
 
+* **0.7**: able to draw grid lines and clear the world; magic values moved to the configuration file.
 * **0.6**: using a configuration file instead of hardcoded values.
 * **0.5**: input can now be configured (programmatically).
 * **0.4**: the input component was getting coupled to the other components, so its events are gone, and the game state component is the foundation component.
