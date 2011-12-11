@@ -1,10 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <XnaContent>
   <Asset Type="Scripts.Config">
-    <Rows>40</Rows>
-    <Columns>40</Columns>
     <TickInMilliseconds>100</TickInMilliseconds>
     <RunAtStart>false</RunAtStart>
+    <World>
+      <Rows>40</Rows>
+      <Columns>40</Columns>
+      <CellWidth>16</CellWidth>
+      <CellHeight>16</CellHeight>
+    </World>
     <Grid>
       <DrawAtStart>true</DrawAtStart>
       <Color>LightGray</Color>

@@ -43,6 +43,8 @@ namespace GameOfLife.Settings
     {
         int Rows { get; }
         int Columns { get; }
+        int CellWidth { get; }
+        int CellHeight { get; }
         TimeSpan Tick { get; }
         bool RunAtStart { get; }
         bool DrawGridAtStart { get; }
@@ -78,13 +80,21 @@ namespace GameOfLife.Settings
         #region Operations
         protected void LoadFrom(Config config)
         {
-            Rows = config.Rows;
-            Columns = config.Columns;
+            //worldly concerns
+            Rows = config.World.Rows;
+            Columns = config.World.Columns;
+            CellWidth = config.World.CellWidth;
+            CellHeight = config.World.CellHeight;
+
+            // time troubles
             Tick = TimeSpan.FromMilliseconds(config.TickInMilliseconds);
             RunAtStart = config.RunAtStart;
+
+            // grid issues
             DrawGridAtStart = config.Grid.DrawAtStart;
             GridColor = ExtractColorFrom(config.Grid.Color);
 
+            // commands
             ToggleCell = ExtractCommandFrom(config.Commands.ToggleCell);
             ToggleRunning = ExtractCommandFrom(config.Commands.ToggleRunning);
             ToggleGrid = ExtractCommandFrom(config.Commands.ToggleGrid);
@@ -149,6 +159,20 @@ namespace GameOfLife.Settings
             private set { _columns = value; }
         }
         private int _columns;
+
+        public int CellWidth
+        {
+            get { return _cellWidth; }
+            private set { _cellWidth = value; }
+        }
+        private int _cellWidth;
+
+        public int CellHeight
+        {
+            get { return _cellHeight; }
+            private set { _cellHeight = value; }
+        }
+        private int _cellHeight;
 
         public TimeSpan Tick
         {

@@ -2,12 +2,19 @@ namespace Scripts
 {
     public struct Config
     {
-        public int Rows;
-        public int Columns;
         public int TickInMilliseconds;
         public bool RunAtStart;
+        public World World;
         public Grid Grid;
         public Commands Commands;
+    }
+
+    public struct World
+    {
+        public int Rows;
+        public int Columns;
+        public int CellWidth;
+        public int CellHeight;
     }
 
     public struct Grid

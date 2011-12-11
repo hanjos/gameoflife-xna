@@ -14,6 +14,8 @@ namespace GameOfLife.Graphics
         int ColumnToY(int column);
 
         bool DrawGrid { get; set; }
+        int CellWidth { get; }
+        int CellHeight { get; }
     }
     
     public class View : Microsoft.Xna.Framework.DrawableGameComponent, IView
@@ -32,7 +34,6 @@ namespace GameOfLife.Graphics
         public View(Game game) : base(game)
         {
             graphics = new GraphicsDeviceManager(game);
-            dummyRectangle = new Rectangle(0, 0, cellWidth, cellHeight);
             backgroundColor = staticColor;
 
             // registering itself as a service
@@ -42,14 +43,19 @@ namespace GameOfLife.Graphics
         public override void Initialize()
         {
             IState gameState = (IState) Game.Services.GetService(typeof(IState));
+            ISettings settings = (ISettings) Game.Services.GetService(typeof(ISettings));
 
-            graphics.PreferredBackBufferWidth = gameState.World.ColumnCount * cellWidth;  // set this value to the desired width of your window
-            graphics.PreferredBackBufferHeight = gameState.World.RowCount * cellHeight;   // set this value to the desired height of your window
+            CellWidth = settings.CellWidth;
+            CellHeight = settings.CellHeight;
+
+            dummyRectangle = new Rectangle(0, 0, CellWidth, CellHeight);
+            
+            graphics.PreferredBackBufferWidth = gameState.World.ColumnCount * CellWidth;  // set this value to the desired width of your window
+            graphics.PreferredBackBufferHeight = gameState.World.RowCount * CellHeight;   // set this value to the desired height of your window
             graphics.ApplyChanges();
 
             gameState.RunningToggled += (sender, args) => backgroundColor = args.Current ? runningColor : staticColor;
 
-            ISettings settings = (ISettings) Game.Services.GetService(typeof(ISettings));
             backgroundColor = settings.RunAtStart ? runningColor : staticColor;
             DrawGrid = settings.DrawGridAtStart;
 
@@ -147,6 +153,20 @@ namespace GameOfLife.Graphics
             set { _drawGrid = value; }
         }
         private bool _drawGrid;
+
+        public int CellWidth 
+        {
+            get { return _cellWidth; }
+            private set { _cellWidth = value; }
+        }
+        private int _cellWidth;
+
+        public int CellHeight
+        {
+            get { return _cellHeight; }
+            private set { _cellHeight = value; }
+        }
+        private int _cellHeight;
         #endregion
 
         #region Events That Should've Have Been Inherited
