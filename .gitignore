@@ -1,6 +1,7 @@
 GameOfLife.suo
 GameOfLife/Code/bin
 GameOfLife/Code/obj
+GameOfLife/Code/Code.csproj.Debug.cachefile
 GameOfLife/Content/bin
 GameOfLife/Content/obj
 GameOfLife/Scripts/bin
