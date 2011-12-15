@@ -7,44 +7,34 @@ using GameOfLife.GameState;
 
 namespace GameOfLife.Input
 {
-    #region Input Component
-    public interface IInput
+    #region Keyboard Input component
+    public interface IKeyInput
     {
         void Register(Keys key, Action<KeyboardState, GameTime> action);
         Action<KeyboardState, GameTime> Unregister(Keys key);
-        
-        void Register(MouseButtons mouseButton, Action<MouseState, GameTime> action);
-        Action<MouseState, GameTime> Unregister(MouseButtons mouseButton);
     }
 
-    public class InputManager : Microsoft.Xna.Framework.GameComponent, IInput
+    public class KeyInput : GameComponent, IKeyInput
     {
         #region Initialization
-        public InputManager(Game game) : base(game)
+        public KeyInput(Game game) : base(game)
         {
             _keyboardInput = new Dictionary<Keys, Action<KeyboardState, GameTime>>();
-            _mouseInput = new Dictionary<MouseButtons, Action<MouseState, GameTime>>();
-
+            
             // registering itself as a service
-            game.Services.AddService(typeof(IInput), this);
+            game.Services.AddService(typeof(IKeyInput), this);
         }
         #endregion
 
         #region Operations
         public override void Update(GameTime gameTime)
         {
-            CheckMouseEvents(gameTime);
             CheckKeyboardEvents(gameTime);
         }
 
         public virtual void Register(Keys key, Action<KeyboardState, GameTime> action)
         {
             _keyboardInput[key] = action;
-        }
-
-        public virtual void Register(MouseButtons mouseButton, Action<MouseState, GameTime> action)
-        {
-            _mouseInput[mouseButton] = action;
         }
 
         public virtual Action<KeyboardState, GameTime> Unregister(Keys key)
@@ -54,35 +44,9 @@ namespace GameOfLife.Input
 
             return action;
         }
-
-        public virtual Action<MouseState, GameTime> Unregister(MouseButtons mouseButton)
-        {
-            if (mouseButton == null) // do nothing
-                return null;
-
-            Action<MouseState, GameTime> action = _mouseInput[mouseButton];
-            _mouseInput.Remove(mouseButton);
-
-            return action;
-        }
         #endregion
 
-        #region Event Detection & Raising
-        protected void CheckMouseEvents(GameTime gameTime)
-        {
-            MouseState current = Mouse.GetState();
-
-            foreach (var entry in _mouseInput)
-            {
-                if (DetectMouseClicked(entry.Key)(LastMouseState, current, gameTime))
-                {
-                    entry.Value(current, gameTime);
-                }
-            }
-
-            LastMouseState = current;
-        }
-
+        #region Event Detection
         protected void CheckKeyboardEvents(GameTime gameTime)
         {
             KeyboardState current = Keyboard.GetState();
@@ -100,7 +64,79 @@ namespace GameOfLife.Input
 
         protected Func<KeyboardState, KeyboardState, GameTime, bool> DetectKeyPressed(Keys key)
         {
-            return (KeyboardState last, KeyboardState current, GameTime gameTime) => last.IsKeyDown(key) && current.IsKeyUp(key);
+            return (last, current, gameTime) => last.IsKeyDown(key) && current.IsKeyUp(key);
+        }
+        #endregion
+
+        #region Properties & Fields
+        private KeyboardState LastKeyboardState
+        {
+            get { if (_lastKeyboardState == null) _lastKeyboardState = Keyboard.GetState(); return _lastKeyboardState; }
+            set { _lastKeyboardState = value; }
+        }
+        private KeyboardState _lastKeyboardState;
+
+        private IDictionary<Keys, Action<KeyboardState, GameTime>> _keyboardInput;
+        #endregion
+    }
+    #endregion
+
+    #region Mouse Input component
+    public interface IMouseInput
+    {
+        void Register(MouseButtons mouseButton, Action<MouseState, GameTime> action);
+        Action<MouseState, GameTime> Unregister(MouseButtons mouseButton);
+    }
+
+    public class MouseInput : Microsoft.Xna.Framework.GameComponent, IMouseInput
+    {
+        #region Initialization
+        public MouseInput(Game game) : base(game)
+        {
+            _mouseInput = new Dictionary<MouseButtons, Action<MouseState, GameTime>>();
+
+            // registering itself as a service
+            game.Services.AddService(typeof(IMouseInput), this);
+        }
+        #endregion
+
+        #region Operations
+        public override void Update(GameTime gameTime)
+        {
+            CheckMouseEvents(gameTime);
+        }
+
+        public virtual void Register(MouseButtons mouseButton, Action<MouseState, GameTime> action)
+        {
+            _mouseInput[mouseButton] = action;
+        }
+
+        public virtual Action<MouseState, GameTime> Unregister(MouseButtons mouseButton)
+        {
+            if (mouseButton == null) // do nothing
+                return null;
+
+            Action<MouseState, GameTime> action = _mouseInput[mouseButton];
+            _mouseInput.Remove(mouseButton);
+
+            return action;
+        }
+        #endregion
+
+        #region Event Detection
+        protected void CheckMouseEvents(GameTime gameTime)
+        {
+            MouseState current = Mouse.GetState();
+
+            foreach (var entry in _mouseInput)
+            {
+                if (DetectMouseClicked(entry.Key)(LastMouseState, current, gameTime))
+                {
+                    entry.Value(current, gameTime);
+                }
+            }
+
+            LastMouseState = current;
         }
 
         protected Func<MouseState, MouseState, GameTime, bool> DetectMouseClicked(MouseButtons key)
@@ -117,15 +153,7 @@ namespace GameOfLife.Input
         }
         private MouseState _lastMouseState;
         
-        private KeyboardState LastKeyboardState
-        {
-            get { if (_lastKeyboardState == null) _lastKeyboardState = Keyboard.GetState(); return _lastKeyboardState; }
-            set { _lastKeyboardState = value; }
-        }
-        private KeyboardState _lastKeyboardState;
-
         private IDictionary<MouseButtons, Action<MouseState, GameTime>> _mouseInput;
-        private IDictionary<Keys, Action<KeyboardState, GameTime>> _keyboardInput;
         #endregion
     }
     #endregion

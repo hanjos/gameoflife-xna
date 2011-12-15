@@ -23,8 +23,11 @@ namespace GameOfLife
             settings = new DefaultSettings(this);
             Components.Add(settings);
 
-            input = new InputManager(this);
-            Components.Add(input);
+            keyInput = new KeyInput(this);
+            Components.Add(keyInput);
+
+            mouseInput = new MouseInput(this);
+            Components.Add(mouseInput);
 
             state = new State(this);
             Components.Add(state);
@@ -44,49 +47,49 @@ namespace GameOfLife
             base.Initialize();
 
             // now set the input
-            input.Register(
+            mouseInput.Register(
                 settings.ToggleCell.As<MouseButtons>(),
                 (current, gameTime) =>
                 {
                     state.World.Toggle(view.XToRow(current.X), view.YToColumn(current.Y));
                 });
 
-            input.Register(
+            keyInput.Register(
                 settings.ToggleRunning.As<Keys>(),
                 (current, gameTime) =>
                 {
                     state.ToggleRunning();
                 });
 
-            input.Register(
+            keyInput.Register(
                 settings.ToggleGrid.As<Keys>(),
                 (current, gameTime) =>
                 {
                     view.DrawGrid = !view.DrawGrid;
                 });
 
-            input.Register(
+            keyInput.Register(
                 settings.SpeedUp.As<Keys>(),
                 (current, gameTime) =>
                 {
                     state.DecreaseTick();
                 });
 
-            input.Register(
+            keyInput.Register(
                 settings.SlowDown.As<Keys>(),
                 (current, gameTime) =>
                 {
                     state.IncreaseTick();
                 });
 
-            input.Register(
+            keyInput.Register(
                 settings.Clear.As<Keys>(),
                 (current, gameTime) =>
                 {
                     state.Clear();
                 });
 
-            input.Register(
+            keyInput.Register(
                 settings.Quit.As<Keys>(),
                 (current, gameTime) =>
                 {
@@ -97,7 +100,8 @@ namespace GameOfLife
 
         #region Fields
         private DefaultSettings settings;
-        private InputManager input;
+        private KeyInput keyInput;
+        private MouseInput mouseInput;
         private State state;
         private View view;
         #endregion
