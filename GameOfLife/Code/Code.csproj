@@ -13,7 +13,7 @@
     <TargetFrameworkProfile>Client</TargetFrameworkProfile>
     <XnaFrameworkVersion>v4.0</XnaFrameworkVersion>
     <XnaPlatform>Windows</XnaPlatform>
-    <XnaProfile>HiDef</XnaProfile>
+    <XnaProfile>Reach</XnaProfile>
     <XnaCrossPlatformGroupID>8c127751-e767-4414-9930-ed538b543f6a</XnaCrossPlatformGroupID>
     <XnaOutputType>Game</XnaOutputType>
     <ApplicationIcon>Game.ico</ApplicationIcon>
