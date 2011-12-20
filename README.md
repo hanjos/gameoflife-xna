@@ -21,7 +21,7 @@ The tag messages should tell you everything, but, at the risk of redundancy:
 * **0.6**: using a configuration file instead of hardcoded values.
 * **0.5**: input can now be configured (programmatically).
 * **0.4**: the input component was getting coupled to the other components, so its events are gone, and the game state component is the foundation component.
-* **0.3**: divvied up MainGame's logic in XNA game components.
+* **0.3**: divvied up MainGame's logic in XNA game components ([thanks][nuclex-components]).
 * **0.2**: tried using events and some extra abstractions here and there for input processing, since XNA provides little.
 * **0.1**: the first working version.
 
@@ -33,14 +33,8 @@ Working on
 To do
 -----
 
-In no particular order:
+Expanded in the wiki page [To Be Continued][tobecontinued]
 
-* **WinForms integration**: Apparently XNA's standard usage doesn't match up well with WinForms; must investigate further.
-* **Dependency injection**: Worth a [look][ninject-xna], if only to rule it out. Seems like [Ninject][ninject] is the name of the game.
-* **Console**: A console seems like a nice idea :)
-* **Dependency management**: [Nuget][nuget]? Is there enough widespread usage, like Maven?
-* **Distribution**: Asking people to run Visual Studio just to get a binary isn't nice :)
-* **Refactoring**: Basically prettying up the code. It's already been componentized ([thanks, by the way][nuclex-components]), but some touches here and there are always nice.
 
 Documentation
 -------------
@@ -54,3 +48,4 @@ What do you mean documentation, my code isn't good enough for you? :P
 [ninject]: http://ninject.org/
 [ninject-xna]: http://www.nuclex.org/articles/architecture/9-using-dependency-injection-in-xna
 [nuget]: http://nuget.org/
+[tobecontinued]: https://github.com/hanjos/gameoflife-xna/wiki/To-Be-Continued
