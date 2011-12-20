@@ -33,13 +33,8 @@ Working on
 To do
 -----
 
-Expanded in the wiki page [To Be Continued][tobecontinued]
+Expanded in the wiki page [To Be Continued][tobecontinued].
 
-
-Documentation
--------------
-
-What do you mean documentation, my code isn't good enough for you? :P
 
 [vcsx10]: http://www.microsoft.com/visualstudio/en-us/products/2010-editions/visual-csharp-express
 [xna4]: http://www.microsoft.com/download/en/details.aspx?id=23714
