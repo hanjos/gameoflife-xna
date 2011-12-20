@@ -1,9 +1,16 @@
-My first shot at using XNA. It works, but it's ugly as sin, and will suffer several refactorings as I learn XNA and C# idioms.
+My first shot at using XNA. It works, but it's ugly as sin (well, less ugly now that I worked on it some :), and will suffer several refactorings as I learn XNA and C# idioms.
 
 How to use
 ----------
 
 Get Visual Studio (I used [Visual C# 2010 Express][vcsx10], it's free) and [XNA Game Studio 4.0][xna4], add the solution, and build it. A binary will be created somewhere inside the project. Dunno if there's a better way to do things in the .NET world.
+
+Dependencies
+------------
+
+* [Visual C# 2010 Express][vcsx10]
+* [XNA Game Studio 4.0][xna4]
+* [NUnit 2.5.10.11092][nunit2_5_10] for testing
 
 Versions
 --------
@@ -21,20 +28,19 @@ The tag messages should tell you everything, but, at the risk of redundancy:
 Working on
 ----------
 
-To be decided...
+* **Testing**. Kinda silly for a small project like this, but it's a good excuse to learn :). I have been delaying this one for a while, but now seems like a good time to shore up the code, since the other stuff will probably lead to some breakage. 
 
 To do
 -----
 
 In no particular order:
 
-* **Testing**. Kinda silly for a small project like this, but it's a good excuse to learn how .NET folks do stuff.
-* **Console**: A console seems like a nice idea :)
 * **WinForms integration**: Apparently XNA's standard usage doesn't match up well with WinForms; must investigate further.
 * **Dependency injection**: Worth a [look][ninject-xna], if only to rule it out. Seems like [Ninject][ninject] is the name of the game.
+* **Console**: A console seems like a nice idea :)
 * **Dependency management**: [Nuget][nuget]? Is there enough widespread usage, like Maven?
-* **Refactoring**: Basically prettying up the code. It's already been componentized ([thanks, by the way][nuclex-components]), but some touches here and there are always nice.
 * **Distribution**: Asking people to run Visual Studio just to get a binary isn't nice :)
+* **Refactoring**: Basically prettying up the code. It's already been componentized ([thanks, by the way][nuclex-components]), but some touches here and there are always nice.
 
 Documentation
 -------------
@@ -43,6 +49,7 @@ What do you mean documentation, my code isn't good enough for you? :P
 
 [vcsx10]: http://www.microsoft.com/visualstudio/en-us/products/2010-editions/visual-csharp-express
 [xna4]: http://www.microsoft.com/download/en/details.aspx?id=23714
+[nunit2_5_10]: http://www.nunit.org/download.html
 [nuclex-components]: http://www.nuclex.org/articles/architecture/6-game-components-and-game-services
 [ninject]: http://ninject.org/
 [ninject-xna]: http://www.nuclex.org/articles/architecture/9-using-dependency-injection-in-xna
