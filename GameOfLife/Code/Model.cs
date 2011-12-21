@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace GameOfLife.Model
@@ -18,7 +19,7 @@ namespace GameOfLife.Model
         #endregion
 
         #region Operations
-        public void Tick()
+        public void Step()
         {
             CellState[,] newCells = new CellState[RowCount, ColumnCount];
 
@@ -56,10 +57,13 @@ namespace GameOfLife.Model
                 select Cells[ii, jj];
         }
 
-        public void Toggle(int i, int j) 
+        public bool Toggle(int i, int j) 
         {
-            if(IsInBounds(i, j))
-                Cells[i, j] = IsAlive(i, j) ? CellState.Dead : CellState.Alive;
+            if (!IsInBounds(i, j))
+                return false;
+
+            Cells[i, j] = IsAlive(i, j) ? CellState.Dead : CellState.Alive;
+            return true;
         }
 
         public bool IsInBounds(int i, int j)
@@ -69,7 +73,7 @@ namespace GameOfLife.Model
 
         public bool IsAlive(int i, int j)
         {
-            return Cells[i, j] == CellState.Alive;
+            return IsInBounds(i, j) && Cells[i, j] == CellState.Alive;
         }
 
         public void Clear()

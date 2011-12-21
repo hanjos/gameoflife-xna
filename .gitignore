@@ -8,3 +8,5 @@ GameOfLife/Scripts/bin
 GameOfLife/Scripts/obj
 GameOfLife/Tests/bin
 GameOfLife/Tests/obj
+GameOfLife/Tests/TestResult.xml
+GameOfLife/Tests/Tests.csproj.VisualState.xml

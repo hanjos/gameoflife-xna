@@ -49,7 +49,7 @@ namespace GameOfLife.GameState
         {
             if (Running && gameTime.TotalGameTime - _timeOfLastTick > Tick)
             {
-                World.Tick();
+                World.Step();
                 _timeOfLastTick = gameTime.TotalGameTime;
             }
 
