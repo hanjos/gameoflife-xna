@@ -3,6 +3,7 @@ TestResult.xml
 GameOfLife/Code/bin
 GameOfLife/Code/obj
 GameOfLife/Code/Code.csproj.Debug.cachefile
+GameOfLife/Code/Code.csproj.Release.cachefile
 GameOfLife/Content/bin
 GameOfLife/Content/obj
 GameOfLife/Scripts/bin
