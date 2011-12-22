@@ -3,14 +3,15 @@ My first shot at using XNA. It works, but it's ugly as sin (well, less ugly now 
 How to use
 ----------
 
-Get Visual Studio (I used [Visual C# 2010 Express][vcsx10], it's free) and [XNA Game Studio 4.0][xna4], add the solution, and build it. A binary will be created somewhere inside the project. Dunno if there's a better way to do things in the .NET world.
+Get Visual Studio (I used [Visual C# 2010 Express][vcsx10], it's free) and [XNA Game Studio 4.0][xna4], add the solution, and build it. A binary will be created somewhere inside the project. I'll eventually [get around to finding a better way :)][tobecontinued]
 
-Dependencies
-------------
+Dependencies & Tooling
+----------------------
 
-* [Visual C# 2010 Express][vcsx10]
+* [.NET Framework 4.0][net4]
 * [XNA Game Studio 4.0][xna4]
-* [NUnit 2.5.10.11092][nunit2_5_10] for testing
+* [NUnit 2.5.10.11092][nunit2_5_10]
+* [Visual C# 2010 Express][vcsx10]
 
 Versions
 --------
@@ -28,14 +29,14 @@ The tag messages should tell you everything, but, at the risk of redundancy:
 Working on
 ----------
 
-* **Testing**. Kinda silly for a small project like this, but it's a good excuse to learn :). I have been delaying this one for a while, but now seems like a good time to shore up the code, since the other stuff will probably lead to some breakage. 
+* [**Testing**][testing]. Kinda silly for a small project like this, but it's a good excuse to learn :). I have been delaying this one for a while, but now seems like a good time to shore up the code, since the other stuff will probably lead to some breakage. The link describes some of my adventures with the tooling.
 
 To do
 -----
 
-Expanded in the wiki page [To Be Continued][tobecontinued].
+Better described [in the wiki][tobecontinued].
 
-
+[net4]: http://www.microsoft.com/download/en/details.aspx?id=17851
 [vcsx10]: http://www.microsoft.com/visualstudio/en-us/products/2010-editions/visual-csharp-express
 [xna4]: http://www.microsoft.com/download/en/details.aspx?id=23714
 [nunit2_5_10]: http://www.nunit.org/download.html
@@ -44,3 +45,4 @@ Expanded in the wiki page [To Be Continued][tobecontinued].
 [ninject-xna]: http://www.nuclex.org/articles/architecture/9-using-dependency-injection-in-xna
 [nuget]: http://nuget.org/
 [tobecontinued]: https://github.com/hanjos/gameoflife-xna/wiki/To-Be-Continued
+[testing]: https://github.com/hanjos/gameoflife-xna/wiki/Testing
