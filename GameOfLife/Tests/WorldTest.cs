@@ -22,12 +22,7 @@ namespace Tests.GameOfLife.Model
             wasteland = new World(ROWS, COLUMNS);
             gliderWorld = new World(ROWS, COLUMNS);
 
-            // a glider
-            gliderWorld.Cells[1, 2] = CellState.Alive;
-            gliderWorld.Cells[2, 3] = CellState.Alive;
-            gliderWorld.Cells[3, 3] = CellState.Alive;
-            gliderWorld.Cells[3, 2] = CellState.Alive;
-            gliderWorld.Cells[3, 1] = CellState.Alive;
+            gliderWorld.AddGlider(1, 1);
         }
 
         [Test]
@@ -254,14 +249,55 @@ namespace Tests.GameOfLife.Model
             CollectionAssert.IsEmpty(gliderWorld.GetNeighbors(ROWS + 10, COLUMNS + 10));
         }
 
-        #region Helper methods
+        [Test]
+        public void StepFollowsConwaysStandardRules()
+        {
+            gliderWorld.Step();
+
+            // the new position is
+            CollectionAssert.AreEquivalent(new Tuple<int, int>[]
+                { Tuple.Create(2, 1), Tuple.Create(2, 3), Tuple.Create(3, 2), Tuple.Create(3, 3), Tuple.Create(4, 2) },
+                GetAllLiveCellsFrom(gliderWorld));
+        }
+
+        // TODO test Step when the construct hits a border?
+
+        #region Helper code
         private List<Tuple<int, int>> GetAllLiveCellsFrom(World world)
         {
-            return (from i in Enumerable.Range(0, world.RowCount)
-                    from j in Enumerable.Range(0, world.ColumnCount)
+            return GetAllLiveCellsFrom(world, 0, world.RowCount, 0, world.ColumnCount);
+        }
+
+        private List<Tuple<int, int>> GetAllLiveCellsFrom(World world, int firstRow, int rowCount, int firstColumn, int columnCount)
+        {
+            return (from i in Enumerable.Range(firstRow, rowCount)
+                    from j in Enumerable.Range(firstColumn, columnCount)
                     where world.IsAlive(i, j)
                     select Tuple.Create(i, j)).ToList();
         }
         #endregion
+    }
+
+    public static class TestUtils
+    {
+        public static void AddGlider(this World world, int rowOffset, int columnOffset)
+        {
+            // a glider:
+            // . * .
+            // . . *
+            // * * *
+
+            world.Cells[rowOffset, columnOffset] = CellState.Dead;
+            world.Cells[rowOffset, columnOffset + 1] = CellState.Alive;
+            world.Cells[rowOffset, columnOffset + 2] = CellState.Dead;
+
+            world.Cells[rowOffset + 1, columnOffset + 0] = CellState.Dead;
+            world.Cells[rowOffset + 1, columnOffset + 1] = CellState.Dead;
+            world.Cells[rowOffset + 1, columnOffset + 2] = CellState.Alive;
+
+            world.Cells[rowOffset + 2, columnOffset + 0] = CellState.Alive;
+            world.Cells[rowOffset + 2, columnOffset + 1] = CellState.Alive;
+            world.Cells[rowOffset + 2, columnOffset + 2] = CellState.Alive;
+        }
     }
 }
