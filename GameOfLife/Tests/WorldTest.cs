@@ -148,36 +148,110 @@ namespace Tests.GameOfLife.Model
         [Test]
         public void GetNeighborsInTheMiddleOfTheWorldReturnsIts8ImmediateNeighbors()
         {
-            IEnumerable<CellState> neighbors = gliderWorld.GetNeighbors(2, 2);
-
             CollectionAssert.AreEquivalent(new CellState[]
                 { CellState.Dead,  CellState.Alive, CellState.Dead, 
                   CellState.Dead,                   CellState.Alive, 
                   CellState.Alive, CellState.Alive, CellState.Alive, }, 
-                neighbors);
+                gliderWorld.GetNeighbors(2, 2));
         }
 
         [Test]
         public void GetNeighborsAtTheSideOfTheWorldReturnsIts5ImmediateNeighbors()
         {
-            IEnumerable<CellState> neighbors = gliderWorld.GetNeighbors(3, 0);
-
             CollectionAssert.AreEquivalent(new CellState[]
                 { CellState.Dead, CellState.Dead, 
                                   CellState.Alive, 
                   CellState.Dead, CellState.Dead, },
-                neighbors);
+                gliderWorld.GetNeighbors(3, 0));
         }
 
         [Test]
         public void GetNeighborsAtTheCornerReturnsIts3ImmediateNeighbors()
         {
-            IEnumerable<CellState> neighbors = gliderWorld.GetNeighbors(0, 0);
-
             CollectionAssert.AreEquivalent(new CellState[]
                 {                 CellState.Dead, 
                   CellState.Dead, CellState.Dead, },
-                neighbors);
+                gliderWorld.GetNeighbors(0, 0));
+        }
+
+        [Test]
+        public void GetNeighborsJustOutsideTheSidesReturnsIts3ValidNeighbors()
+        {
+            CollectionAssert.AreEquivalent(new CellState[]
+                {           CellState.Dead, 
+                            CellState.Dead, 
+                            CellState.Dead },
+                gliderWorld.GetNeighbors(2, -1));
+
+            CollectionAssert.AreEquivalent(new CellState[]
+                { CellState.Dead, 
+                  CellState.Dead, 
+                  CellState.Dead          },
+                gliderWorld.GetNeighbors(2, COLUMNS));
+
+            CollectionAssert.AreEquivalent(new CellState[]
+                { 
+                  CellState.Dead, CellState.Dead, CellState.Dead },
+                gliderWorld.GetNeighbors(-1, 2));
+
+            CollectionAssert.AreEquivalent(new CellState[]
+                { CellState.Dead, CellState.Dead, CellState.Dead 
+                                                                 },
+                gliderWorld.GetNeighbors(ROWS, 2));
+        }
+
+        [Test]
+        public void GetNeighborsJustOutsideTheCornersReturnsIts2ValidNeighbors()
+        {
+            CollectionAssert.AreEquivalent(new CellState[]
+                {           CellState.Dead, 
+                            CellState.Dead },
+                gliderWorld.GetNeighbors(0, -1));
+
+            CollectionAssert.AreEquivalent(new CellState[]
+                { CellState.Dead, 
+                  CellState.Dead           },
+                gliderWorld.GetNeighbors(0, COLUMNS));
+
+            CollectionAssert.AreEquivalent(new CellState[]
+                {           CellState.Dead, 
+                            CellState.Dead },
+                gliderWorld.GetNeighbors(ROWS - 1, -1));
+
+            CollectionAssert.AreEquivalent(new CellState[]
+                { CellState.Dead, 
+                  CellState.Dead           },
+                gliderWorld.GetNeighbors(ROWS - 1, COLUMNS));
+        }
+
+        [Test]
+        public void GetNeighborsJustOppositeTheCornersReturnsItsOnlyValidNeighbor()
+        {
+            CollectionAssert.AreEquivalent(new CellState[]
+                {           
+                            CellState.Dead },
+                gliderWorld.GetNeighbors(-1, -1));
+
+            CollectionAssert.AreEquivalent(new CellState[]
+                { 
+                  CellState.Dead           },
+                gliderWorld.GetNeighbors(-1, COLUMNS));
+
+            CollectionAssert.AreEquivalent(new CellState[]
+                {           CellState.Dead 
+                                           },
+                gliderWorld.GetNeighbors(ROWS, -1));
+
+            CollectionAssert.AreEquivalent(new CellState[]
+                { CellState.Dead 
+                                           },
+                gliderWorld.GetNeighbors(ROWS, COLUMNS));
+        }
+
+        [Test]
+        public void GetNeighborsTooFarOutsideTheWorldAreForeverAlone()
+        {
+            CollectionAssert.IsEmpty(gliderWorld.GetNeighbors(ROWS + 10, COLUMNS + 10));
         }
 
         #region Helper methods
