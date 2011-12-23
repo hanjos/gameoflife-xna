@@ -18,6 +18,7 @@ Versions
 
 The tag messages should tell you everything, but, at the risk of redundancy:
 
+* **0.8**: started [unit testing][testing].
 * **0.7**: able to draw grid lines and clear the world; magic values moved to the configuration file.
 * **0.6**: using a configuration file instead of hardcoded values.
 * **0.5**: input can now be configured (programmatically).
@@ -29,7 +30,7 @@ The tag messages should tell you everything, but, at the risk of redundancy:
 Working on
 ----------
 
-* [**Testing**][testing]. Kinda silly for a small project like this, but it's a good excuse to learn :). I have been delaying this one for a while, but now seems like a good time to shore up the code, since the other stuff will probably lead to some breakage. The link describes some of my adventures with the tooling.
+* To be decided...
 
 To do
 -----
